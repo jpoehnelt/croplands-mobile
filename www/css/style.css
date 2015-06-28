@@ -1,6 +1,55 @@
 .list-stable .item {
     background-color: #e5e5e5;
 }
+
 .list-energized .item {
     background-color: #f0b840;
+}
+
+.center {
+    text-align: center;
+}
+
+.collect-photo {
+    margin: 5px auto;
+    max-width: 200px;
+    position: relative;
+}
+
+.collect-photo img {
+    max-width: 100%;
+    z-index: 99;
+}
+
+.collect-photo .remove {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    z-index: 100;
+    font-size: 30px;
+}
+
+.info {
+    color: #ffffff;
+}
+
+.warning {
+    color: #0088FF;
+}
+
+.error {
+    color: #ff0000;
+}
+
+.debug {
+    color: #44FF44;
+}
+
+.ios ion-side-menu ion-content ion-list ion-item:first-of-type {
+    padding-top: 30px;
+}
+
+.angular-leaflet-map, .map {
+    width: 100%;
+    height: 100%;
 }

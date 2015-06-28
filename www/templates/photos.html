@@ -1,0 +1,15 @@
+<ion-view view-title="Photos">
+    <ion-content>
+        <div class="row" ng-repeat="photo in photos track by $index" ng-if="$index%3==0">
+            <div class="col col-33">
+                <img ng-src="{{ photos[$index].filename }}" style="width: inherit;"/>
+            </div>
+            <div class="col col-33">
+                <img ng-src="{{ photos[$index+1].filename }}" style="width: inherit;"/>
+            </div>
+            <div class="col col-33">
+                <img ng-src="{{ photos[$index+2].filename }}" style="width: inherit;"/>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

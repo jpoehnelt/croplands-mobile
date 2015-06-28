@@ -1,93 +1,114 @@
 <ion-view view-title="Collect Data">
     <ion-content>
-        <!--<div class="list card">-->
-
-        <!--<div class="item">-->
-        <!--</div>-->
-
-        <!--<div class="item item-image">-->
-        <!--<img src="cover.jpg">-->
-        <!--</div>-->
-
-
-        <!--</div>-->
-
-        <div style="padding: 5px">
-            <button class="button button-block">Take Photo</button>
+        <div ng-if="photosEnabled">
+            <div class="row">
+                <div class="col center" ng-repeat="photo in photos">
+                    <div class="collect-photo">
+                        <img src="{{photo}}"/>
+                        <i class="icon ion-minus-circled remove balanced" ng-click="removePhoto($index)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button button-block" ng-click="takePhoto()" ng-if="photos.length < 5">Take Photo
+                    </button>
+                </div>
+            </div>
         </div>
-
+        {{getOrientation()}}
         <div class="list">
+            <div class="item item-divider">
+                Location
+            </div>
             <label class="item item-toggle">
-                GPS Collect Points
+                Capture Location
                 <label class="toggle toggle-balanced">
-                    <input type="checkbox">
+                    <input type="checkbox" ng-model="gps.on" ng-change="gpsToggle()">
 
                     <div class="track">
                         <div class="handle"></div>
                     </div>
                 </label>
             </label>
+
             <div class="item item-button-right">
-                Points Averaged: 11
-                <button class="button button-small">Clear</button>
+                Points Averaged: {{gps.locations.length}}
+                <button class="button button-small" ng-click="gpsClear()">Clear</button>
             </div>
             <div class="item">
-                Lat: 12.3 Lon: 123 Heading: 13
+                Lat: {{ location.lat | number : 8 }} Lon: {{ location.lon | number : 8 }}
             </div>
-        </div>
-        <div class="list">
+            <div class="item item-divider">
+                Area Information
+            </div>
+            <div class="item item-button-right">
+                {{getOrientationDegrees()}}
+                Bearing to Center: {{getOrientation()}}{{ location.bearing }}
+                <button class="button button-small" ng-click="captureHeading()">Capture</button>
+            </div>
+            <!--<label class="item item-input">-->
+            <!--<span class="input-label col-75">Distance to Center</span>-->
+            <!--<input type="number" ng-model="offset" placeholder="meters">-->
+            <!--</label>-->
+            <!--<label class="item item-input item-select">-->
+            <!--<div class="input-label">-->
+            <!--Area Size-->
+            <!--</div>-->
+            <!--<select>-->
+            <!--<option>Unknown</option>-->
+            <!--<option>Small</option>-->
+            <!--<option>Medium</option>-->
+            <!--<option>Large</option>-->
+            <!--</select>-->
+            <!--</label>-->
+
+            <div class="item item-divider">
+                Land Cover
+            </div>
             <label class="item item-input item-select">
                 <div class="input-label">
                     Land Cover Type
                 </div>
-                <select>
-                    <option selected>Unknown</option>
-                    <option>Green</option>
-                    <option>Red</option>
+                <select ng-model="record.land_use_type" ng-options="type.id as type.label for type in choices.landUse">
                 </select>
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
                 <div class="input-label">
                     Water Source
                 </div>
-                <select>
-                    <option selected>Unknown</option>
-                    <option>Rainfed</option>
-                    <option>Irrigated</option>
+                <select ng-model="record.water" ng-options="type.id as type.label for type in choices.water">
                 </select>
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
                 <div class="input-label">
                     Crop Intensity
                 </div>
-                <select>
-                    <option selected>Unknown</option>
-                    <option>Single</option>
-                    <option>Double</option>
-                    <option>Triple</option>
-                    <option>Continuous</option>
+                <select ng-model="record.intensity" ng-options="type.id as type.label for type in choices.intensity">
                 </select>
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
                 <div class="input-label">
-                    Field Size
+                    Crop Type
                 </div>
-                <select>
-                    <option selected>Unknown</option>
-                    <option>Small</option>
-                    <option>Medium</option>
-                    <option>Large</option>
+                <select ng-model="record.crop_primary" ng-options="type.id as type.label for type in choices.crop">
                 </select>
             </label>
-
         </div>
         <div style="padding: 5px">
-            <button class="button button-block">
+            <button class="button button-block" ng-click="save()" ng-disabled="!isValid()">
                 Save
             </button>
-            <button class="button button-block">
+            <a class="button button-block" ng-click="cancel()">
                 Cancel
-            </button>
+            </a>
+        </div>
+        <div style="background: #000000; color: #ffffff; border: 1px solid #cccccc; padding: 4px;"
+             ng-show="messages.length">
+            <ul>
+                <li class="{{ item.type }}" ng-repeat="item in messages">{{item.message}}
+                </li>
+            </ul>
         </div>
     </ion-content>
 </ion-view>

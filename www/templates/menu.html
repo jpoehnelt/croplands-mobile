@@ -1,19 +1,16 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus ng-class="{ios: platform == 'iOS'}" enable-menu-with-back-views="true">
     <ion-side-menu-content>
         <ion-nav-bar class="bar bar-balanced">
-            <ion-nav-back-button>
-            </ion-nav-back-button>
-
+            <!--<ion-nav-back-button class="button-clear">-->
+            <!--<i class="icon ion-chevron-left"></i> Back-->
+            <!--</ion-nav-back-button>-->
             <ion-nav-buttons side="left">
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
                 </button>
             </ion-nav-buttons>
-            <ion-nav-buttons side="right">
-                <a class="button button-icon button-clear ion-location" href="#/app/collect">
-                </a>
-                <a class="button button-icon button-clear ion-map" href="#/app/map">
-                </a>
-            </ion-nav-buttons>
+            <!--<ion-nav-buttons side="right">-->
+            <!--<a class="button button-icon button-clear ion-location" ng-click="collect()"></a>-->
+            <!--</ion-nav-buttons>-->
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
@@ -21,24 +18,27 @@
     <ion-side-menu side="left">
         <ion-content>
             <ion-list>
-                <ion-item nav-clear menu-close href="#/app/home">
-                    Home
+                <ion-item nav-clear menu-close ng-click="go('app.home')">
+                    Dashboard
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/map">
+                <ion-item nav-clear menu-close ng-click="go('app.map')">
                     Map
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/collect">
+                <ion-item nav-clear menu-close ng-click="go('app.collect')">
                     Collect Data
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/instructions">
-                    Instructions
+                <ion-item nav-clear menu-close ng-click="go('app.photos')">
+                    Photos
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/definitions">
-                    Definitions
-                </ion-item>
-                <ion-item nav-clear menu-close ng-click="login()">
-                    Login
-                </ion-item>
+                <!--<ion-item nav-clear menu-close href="#/app/instructions">-->
+                <!--Instructions-->
+                <!--</ion-item>-->
+                <!--<ion-item nav-clear menu-close href="#/app/definitions">-->
+                <!--Definitions-->
+                <!--</ion-item>-->
+                <!--<ion-item nav-clear menu-close ng-click="login()">-->
+                <!--Login-->
+                <!--</ion-item>-->
             </ion-list>
         </ion-content>
     </ion-side-menu>

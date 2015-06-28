@@ -1,24 +1,32 @@
 <ion-view view-title="Global Croplands">
     <ion-content data-tap-disabled="true">
         <div style="padding: 5px">
-            <h4>Global Croplands</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.</p>
             <a class="button button-block" href="#/app/collect">
                 Collect Data
             </a>
-            <button class="button button-block">
+            <button class="button button-block" ng-click="sync()" ng-disabled="!canSync()">
                 Sync Data
             </button>
-            <button class="button button-block">
-                Logout
-            </button>
-            <h5>Privacy Statement</h5>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua.</p>
+            <div style="background: #000000; color: #ffffff; border: 1px solid #cccccc; padding: 4px;"
+                 ng-show="messages.length">
+                <ul>
+                    <li class="{{ item.type }}" ng-repeat="item in messages">{{item.message}}
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col center" ng-repeat="photo in photos">
+                    <div class="collect-photo">
+                        {{ photo }}
+                        <!--<img src="{{photo}}"/>-->
+                        <i class="icon ion-minus-circled remove balanced" ng-click="removePhoto($index)"></i>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:5px 5px">
+                <button class="button button-block" ng-click="takePhoto()" ng-if="photos.length < 5">Take Photo</button>
+            </div>
         </div>
+
     </ion-content>
 </ion-view>

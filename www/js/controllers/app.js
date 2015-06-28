@@ -1,6 +1,5 @@
-angular.module('starter.controllers', [])
-
-    .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+angular.module('croplandsApp.controllers')
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice) {
         // Form data for the login modal
         $scope.loginData = {};
 
@@ -31,27 +30,16 @@ angular.module('starter.controllers', [])
                 $scope.closeLogin();
             }, 1000);
         };
-    })
-    .controller('HomeCtrl', function ($scope, $stateParams) {
-    })
-    .controller('MapCtrl', function ($scope) {
-        $scope.map = {
-            defaults: {
-                tileLayer: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                maxZoom: 14,
-                zoomControlPosition: 'bottomleft',
-                path: {
-                    weight: 10,
-                    color: '#800000',
-                    opacity: 1
-                }
-            },
-            center: {
-                lat: 44.52,
-                lng: -122.68,
-                zoom: 5
-            }
+
+        $scope.go = function (state) {
+            $state.go(state);
         };
-    })
-    .controller('CollectCtrl', function ($scope, $stateParams) {
+
+        try {
+            $scope.platform = $cordovaDevice.getPlatform();
+        }
+        catch (e){
+            $scope.platform = 'unknown';
+        }
+
     });

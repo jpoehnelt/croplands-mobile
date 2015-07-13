@@ -5,7 +5,7 @@ angular.module('croplandsApp.controllers')
                 return result;
             });
         }, function (photos, old) {
-            Photos.getAllUnsynced().then(function (result) {
+            Photos.getAll().then(function (result) {
                 $scope.photos = [];
                 for (var i = 0; i < result.length; i++) {
                     var photo = result[i];

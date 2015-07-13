@@ -1,5 +1,13 @@
 angular.module('croplandsApp.controllers')
-    .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', '$cordovaDeviceOrientation', '$cordovaDevice', '$window', 'Log', 'screenOrientationService', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, $cordovaDeviceOrientation, $cordovaDevice, $window, Log, screenOrientationService, $state, $cordovaNetwork, $cordovaFile, Photos) {
+    .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', '$cordovaDeviceOrientation', '$cordovaDevice', '$window', 'Log', 'screenOrientationService', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, $cordovaDeviceOrientation, $cordovaDevice, $window, Log, screenOrientationService, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
+
+        if (!GPS.isOn()) {
+            GPS.turnOn();
+        }
+
+        $scope.$on('GPS.on', function (event, position) {
+            logPosition(position);
+        });
 
         angular.extend($scope, {
             gps: {
@@ -36,6 +44,11 @@ angular.module('croplandsApp.controllers')
             $scope.platform = 'unknown';
         }
 
+
+        /**
+         * Function redirects back to the dashboard after cleaning up.
+         * Turns gps off and clears locations that were saved.
+         */
         function redirectHome() {
             $scope.gps.on = false;
             $scope.gpsClear();
@@ -50,7 +63,10 @@ angular.module('croplandsApp.controllers')
             Log.warning('Could not get device id.')
         }
 
-        // Watch for changes to land use, if not cropland, remove fields specific to cropland, else set to uknown;
+        /**
+         * Watch for changes to land use, if not cropland,
+         * remove fields specific to cropland, else set to unknown;
+         */
         $scope.$watch('record.land_use_type', function (val) {
             if (val !== 1) {
                 delete $scope.record.water;
@@ -134,30 +150,26 @@ angular.module('croplandsApp.controllers')
             });
         };
 
-        function LogLocation() {
-            if ($scope.gps.on == true) {
-                $cordovaGeolocation.getCurrentPosition().then(function (position) {
-                    if (position.coords.accuracy < 150) {
-                        Log.info('Captured Position - Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
-                        $scope.gps.locations.push({
-                            'date_taken': new Date(position.timestamp).toISOString(),
-                            'speed': position.coords.speed,
-                            'altitude': position.coords.altitude,
-                            'altitude_accuracy': position.coords.altitudeAccuracy,
-                            'lat': position.coords.latitude,
-                            'lon': position.coords.longitude,
-                            'accuracy': position.coords.accuracy,
-                            'heading': position.coords.heading
-                        });
-                    } else {
-                        Log.error('Captured Position - Accuracy: ' + String(position.coords.accuracy) + ' meters');
-                    }
-                }, function (err) {
-                    Log.error(err);
+        /**
+         * Stores position in array if it meets the minimum accuracy specified.
+         * @param position integer
+         */
+        function logPosition(position) {
+            if (position.coords.accuracy < 150 && $scope.gps.on) {
+                Log.info('Captured Position, Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
+                $scope.gps.locations.push({
+                    'date_taken': new Date(position.timestamp).toISOString(),
+                    'speed': position.coords.speed,
+                    'altitude': position.coords.altitude,
+                    'altitude_accuracy': position.coords.altitudeAccuracy,
+                    'lat': position.coords.latitude,
+                    'lon': position.coords.longitude,
+                    'accuracy': position.coords.accuracy,
+                    'heading': position.coords.heading
                 });
-                $timeout(function () {
-                    LogLocation();
-                }, 5000)
+            }
+            else {
+                Log.info('Ignored Position, Accuracy: ' + String(position.coords.accuracy) + ' meters');
             }
         }
 
@@ -177,11 +189,6 @@ angular.module('croplandsApp.controllers')
 
         $scope.gpsClear = function () {
             $scope.gps.locations = [];
-        };
-
-        $scope.gpsToggle = function () {
-            // try to start gps
-            LogLocation()
         };
 
         $scope.isValid = function () {
@@ -211,16 +218,22 @@ angular.module('croplandsApp.controllers')
 
             Location.save($scope.location).then(
                 function (result) {
+                    var photoPromises = [];
+
                     while ($scope.photos.length) {
                         var photo = $scope.photos.pop();
-                        Photos.save(photo, result.insertId, 0, 0, 0, {}).then(function (result) {
-                            Log.debug(result);
-                        }, function (err) {
-                            Log.error(err);
-                        });
+                        photoPromises.push(Photos.save(photo, result.insertId, 0, 0, 0, {}));
                     }
-                    Log.debg(result.insertId);
-                    redirectHome();
+
+                    // after all photos have been saved...
+                    $q.all(photoPromises).then(function (data) {
+                        Log.info(data.length + ' Photos Saved');
+                        redirectHome();
+                    }, function (err) {
+                        Log.error(err);
+                        redirectHome();
+                    });
+
                 },
                 function (error) {
                     Log.error(error);

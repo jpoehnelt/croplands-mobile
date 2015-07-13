@@ -20,7 +20,7 @@ angular.module('croplandsApp.services')
                     columns.push(column.name + ' ' + column.type);
                 });
                 var drop = 'DROP TABLE ' + table.name;
-                self.query(drop);
+//                self.query(drop);
                 var query = 'CREATE TABLE IF NOT EXISTS ' + table.name + ' (' + columns.join(',') + ')';
                 self.query(query).then(function (result) {
                     Log.debug(result);

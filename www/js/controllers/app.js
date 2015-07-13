@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice) {
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope) {
         // Form data for the login modal
         $scope.loginData = {};
 

@@ -1,3 +1,4 @@
+angular.module('croplandsApp.directives', []);
 angular.module('croplandsApp.services', ['ionic', 'ngCordova']);
 angular.module('croplandsApp.controllers', ['ionic', 'ngCordova', 'croplandsApp.services', 'croplands.mappings']);
 
@@ -114,17 +115,21 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         });
 
     })
-    .run(['$ionicPlatform', 'GPS','Log', function ($ionicPlatform, GPS, Log) {
+    .run(['$ionicPlatform', 'GPS','Log','Compass', function ($ionicPlatform, GPS, Log, Compass) {
 
         GPS.turnOn();
+        Compass.turnOn();
 
         $ionicPlatform.on("resume", function (event) {
             Log.debug('resume');
             GPS.turnOn();
+            Compass.turnOn();
         });
 
         $ionicPlatform.on("pause", function (event) {
             Log.debug('pause');
             GPS.turnOff();
+            Compass.turnOff();
+
         });
     }]);

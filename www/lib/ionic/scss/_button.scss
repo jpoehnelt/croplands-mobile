@@ -124,6 +124,7 @@
     @include button-clear($button-dark-bg);
     @include button-outline($button-dark-bg);
   }
+  &.button-disabled
 }
 
 .button-small {

@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope) {
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope, GPS) {
         // Form data for the login modal
         $scope.loginData = {};
 
@@ -38,8 +38,24 @@ angular.module('croplandsApp.controllers')
         try {
             $scope.platform = $cordovaDevice.getPlatform();
         }
-        catch (e){
+        catch (e) {
             $scope.platform = 'unknown';
         }
+
+        $scope.$watch(function () {
+            return GPS.getFix();
+        }, function (val) {
+            if (val > 0) {
+                $scope.gpsFix = Math.round(val) + ' m';
+            } else {
+                $scope.gpsFix = 'no fix';
+            }
+        });
+
+        $scope.$on('Compass.heading', function (e, result) {
+            $scope.heading = result.trueHeading || result.magneticHeading;
+            $scope.ionNavigationIconRotate = 360 - $scope.heading - 45;
+        });
+
 
     });

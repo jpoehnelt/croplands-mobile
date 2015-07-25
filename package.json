@@ -1,7 +1,7 @@
 {
   "name": "croplands-mobile",
-  "version": "1.0.0",
-  "description": "croplands-mobile: An Ionic project",
+  "version": "1.2.0",
+  "description": "Data for Mapping Global Croplands",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",

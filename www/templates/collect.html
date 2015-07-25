@@ -44,7 +44,7 @@
             </div>
             <div class="item item-button-right">
                 {{getOrientationDegrees()}}
-                Bearing to Center: {{getOrientation()}}{{ location.bearing }}
+                Bearing to Center: {{getOrientation()}}{{ location.bearing | number }}
                 <button class="button button-small" ng-click="captureHeading()">Capture</button>
             </div>
             <!--<label class="item item-input">-->

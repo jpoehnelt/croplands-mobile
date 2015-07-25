@@ -20,7 +20,6 @@
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="lib/lodash.js"></script>
     <script src="lib/croplands-mappings.js"></script>
-    <script src="lib/screen-orientation.js"></script>
 
 
     <!-- cordova script (this will be a 404 during development) -->
@@ -32,6 +31,7 @@
     <script src="js/services/log.js"></script>
     <script src="js/services/db.js"></script>
     <script src="js/services/gps.js"></script>
+    <script src="js/services/compass.js"></script>
     <script src="js/controllers/app.js"></script>
     <script src="js/controllers/collect.js"></script>
     <script src="js/controllers/home.js"></script>
@@ -39,6 +39,7 @@
     <script src="js/controllers/photos.js"></script>
 
     <script src="js/directives/angular-leaflet-directive.min.js"></script>
+    <script src="js/directives/rotate.js"></script>
     <script>
         window.ionic.Platform.ready(function () {
             angular.bootstrap(document, ['croplandsApp']);

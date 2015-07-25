@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', '$cordovaDeviceOrientation', '$cordovaDevice', '$window', 'Log', 'screenOrientationService', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, $cordovaDeviceOrientation, $cordovaDevice, $window, Log, screenOrientationService, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
+    .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', 'Compass', '$cordovaDevice', '$window', 'Log', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, Compass, $cordovaDevice, $window, Log, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
 
         if (!GPS.isOn()) {
             GPS.turnOn();
@@ -50,9 +50,14 @@ angular.module('croplandsApp.controllers')
          * Turns gps off and clears locations that were saved.
          */
         function redirectHome() {
+            cleanUp();
+            $state.go('app.home');
+        }
+
+        function cleanUp() {
             $scope.gps.on = false;
             $scope.gpsClear();
-            $state.go('app.home');
+            Log.debug('[CollectCtr] Cleanup complete')
         }
 
 
@@ -86,44 +91,13 @@ angular.module('croplandsApp.controllers')
         }, true);
 
 
-        // Android Nexus 7 wasn't returning a value on first attempt of compass use...
-        try {
-            $cordovaDeviceOrientation.getCurrentHeading();
-        }
-        catch (e) {
-            // nothing
-        }
-
-
         $scope.captureHeading = function () {
-            Log.debug("Attempting to Capture Heading");
-            try {
-                Log.debug('Orientation' + screen.orientation);
-                $cordovaDeviceOrientation.getCurrentHeading().then(function (result) {
-                    // Level of accuracy not important but take more accurate reading if it is there
-                    var heading = (Math.round(result.trueHeading | result.magneticHeading));
-
-                    // nexus 7 tablet does not adjust for orientation
-                    // TODO More testing
-
-                    Log.debug(result);
-                    Log.debug(screenOrientationService.getDegrees());
-                    if ($scope.platform === 'Android') {
-                        Log.debug("Adjusting for orientation");
-                        heading = (heading + screenOrientationService.getDegrees()) % 360;
-                    }
-
-                    // Save to scope
-                    $scope.location.bearing = heading;
-
-                    // Tell the user the heading
-                    Log.debug("Heading: " + String($scope.location.bearing));
-                });
-            }
-            catch (err) {
-                Log.error('Device orientation not allowed.');
-            }
-
+            // Save to scope
+            Compass.getHeading().then(function (result) {
+                $scope.location.bearing = result.trueHeading || result.magneticHeading;
+                // Tell the user the heading
+                Log.debug("Heading: " + String($scope.location.bearing));
+            });
         };
 
         $scope.takePhoto = function () {
@@ -135,6 +109,7 @@ angular.module('croplandsApp.controllers')
                 targetWidth: 1000,
                 targetHeight: 1000
             }).then(function (imageURI) {
+                Log.debug('[CollectCtrl] Photo taken');
                 Log.debug(imageURI);
                 $scope.photos.push(imageURI);
             }, function (err) {
@@ -157,6 +132,7 @@ angular.module('croplandsApp.controllers')
         function logPosition(position) {
             if (position.coords.accuracy < 150 && $scope.gps.on) {
                 Log.info('Captured Position, Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
+                Log.debug('[CollectCtrl] Captured Position, Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
                 $scope.gps.locations.push({
                     'date_taken': new Date(position.timestamp).toISOString(),
                     'speed': position.coords.speed,
@@ -189,6 +165,7 @@ angular.module('croplandsApp.controllers')
 
         $scope.gpsClear = function () {
             $scope.gps.locations = [];
+            Log.debug('[CollectCtrl] Locations Cleared: ' + $scope.gps.locations.length + ' remaining');
         };
 
         $scope.isValid = function () {
@@ -198,6 +175,8 @@ angular.module('croplandsApp.controllers')
 
         $scope.save = function () {
             var today = new Date();
+
+            Log.debug('[CollectCtrl] Save Action Beginning');
 
             // Check that data is valid
             if (!$scope.isValid()) {
@@ -219,6 +198,7 @@ angular.module('croplandsApp.controllers')
             Location.save($scope.location).then(
                 function (result) {
                     var photoPromises = [];
+                    Log.debug('[CollectCtrl] Location Saved');
 
                     while ($scope.photos.length) {
                         var photo = $scope.photos.pop();
@@ -227,6 +207,7 @@ angular.module('croplandsApp.controllers')
 
                     // after all photos have been saved...
                     $q.all(photoPromises).then(function (data) {
+                        Log.debug('[CollectCtrl] ' + data.length + ' Photos Saved');
                         Log.info(data.length + ' Photos Saved');
                         redirectHome();
                     }, function (err) {

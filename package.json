@@ -18,7 +18,9 @@
     "org.apache.cordova.device-orientation",
     "org.apache.cordova.device",
     "com.ionic.keyboard",
-    "net.yoik.cordova.plugins.screenorientation",
-    "org.apache.cordova.network-information"
+    "org.apache.cordova.network-information",
+    "org.apache.cordova.camera",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer"
   ]
 }

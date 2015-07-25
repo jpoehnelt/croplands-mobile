@@ -3,7 +3,7 @@ angular.module('croplandsApp.services')
         var compassWatch, // global for turning watch on/off
             headings = [], // array of positions
             watchOptions = {
-                frequency: 10
+                frequency: 50
             };
 
         /**

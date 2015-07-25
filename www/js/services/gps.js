@@ -3,7 +3,7 @@ angular.module('croplandsApp.services')
         var geoWatch, // global for turning watch on/off
             positions = [], // array of positions
             watchOptions = {
-                frequency: 200, // how often to retrieve a position if possible
+                frequency: 800, // how often to retrieve a position if possible
                 timeout: 10000, // when to throw an exception
                 enableHighAccuracy: true // use gps for higher resolution and when no network location is available
             }, currentAccuracy = -1, currentAccuracyExpiration;

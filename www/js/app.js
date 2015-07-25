@@ -2,7 +2,7 @@ angular.module('croplandsApp.directives', []);
 angular.module('croplandsApp.services', ['ionic', 'ngCordova']);
 angular.module('croplandsApp.controllers', ['ionic', 'ngCordova', 'croplandsApp.services', 'croplands.mappings']);
 
-angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsApp.services', 'screenOrientation', 'leaflet-directive'])
+angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsApp.services', 'leaflet-directive'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {

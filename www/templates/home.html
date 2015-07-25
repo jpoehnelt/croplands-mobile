@@ -1,6 +1,6 @@
 <ion-view view-title="Global Croplands">
     <ion-content data-tap-disabled="true">
-        <div style="padding: 5px">
+        <div class="padding">
             <a class="button button-block" href="#/app/collect">
                 Collect Data
             </a>
@@ -13,18 +13,6 @@
                     <li class="{{ item.type }}" ng-repeat="item in messages">{{item.message}}
                     </li>
                 </ul>
-            </div>
-            <div class="row">
-                <div class="col center" ng-repeat="photo in photos">
-                    <div class="collect-photo">
-                        {{ photo }}
-                        <!--<img src="{{photo}}"/>-->
-                        <i class="icon ion-minus-circled remove balanced" ng-click="removePhoto($index)"></i>
-                    </div>
-                </div>
-            </div>
-            <div style="padding:5px 5px">
-                <button class="button button-block" ng-click="takePhoto()" ng-if="photos.length < 5">Take Photo</button>
             </div>
         </div>
 

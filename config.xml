@@ -5,7 +5,7 @@
     <description>
         Helping improve food security by mapping cropland across the globe.
     </description>
-    <author email="jpoehnelt@usgs.gove" href="http://www.croplands.org">
+    <author email="jpoehnelt@usgs.gov" href="http://www.croplands.org">
         Justin Poehnelt
     </author>
     <content src="index.html"/>

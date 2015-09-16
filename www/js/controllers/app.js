@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope, GPS) {
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope, GPS, $ionicViewSwitcher) {
         // Form data for the login modal
         $scope.loginData = {};
 
@@ -32,6 +32,12 @@ angular.module('croplandsApp.controllers')
         };
 
         $scope.go = function (state) {
+            if (state === 'app.home') {
+                $ionicViewSwitcher.nextDirection('back'); // 'forward', 'back', etc.
+            } else {
+                $ionicViewSwitcher.nextDirection('forward'); // 'forward', 'back', etc.
+            }
+
             $state.go(state);
         };
 

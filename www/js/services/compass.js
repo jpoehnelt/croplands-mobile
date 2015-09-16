@@ -11,21 +11,19 @@ angular.module('croplandsApp.services')
          */
         function turnOn() {
             turnOff();
-            compassWatch = $cordovaDeviceOrientation.watchHeading(watchOptions);
-
-            compassWatch.then(
-                null,
-                function (err) {
-                    Log.error(err);
-                }, function (result) {
-
-                    $rootScope.$broadcast('Compass.heading', result);
-
-                    // headings.push(result);
-
-                    // rotate();
-                }
-            );
+            try {
+                compassWatch = $cordovaDeviceOrientation.watchHeading(watchOptions);
+                compassWatch.then(
+                    null,
+                    function (err) {
+                        Log.error(err);
+                    }, function (result) {
+                        $rootScope.$broadcast('Compass.heading', result);
+                    }
+                );
+            } catch(err) {
+                Log.error(err);
+            }
         }
 
         function rotate() {

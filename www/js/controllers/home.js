@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('HomeCtrl', ['$scope', '$stateParams', 'Location', '$http', 'Log', function ($scope, $stateParams, Location, $http, Log) {
+    .controller('HomeCtrl', ['$scope', '$state', 'Location', '$http', 'Log', function ($scope, $state, Location, $http, Log) {
 
         $scope.messages = Log.messages();
 
@@ -9,4 +9,9 @@ angular.module('croplandsApp.controllers')
                 Log.info("Sync complete");
             });
         };
+
+        var help_viewed = window.localStorage.getItem('help_viewed');
+        if (help_viewed !== true) {
+            $state.go('app.help');
+        }
     }]);

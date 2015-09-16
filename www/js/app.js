@@ -92,6 +92,15 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                         controller: 'PhotosCtrl'
                     }
                 }
+            })
+            .state('app.help', {
+                url: "/help",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/help.html",
+                        controller: 'HelpCtrl'
+                    }
+                }
             });
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/home');

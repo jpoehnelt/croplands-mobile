@@ -113,8 +113,9 @@ angular.module('croplandsApp.services')
                 markSynced(location.id, response.data).then(function () {
                     deferred.resolve();
                 });
-            }, function (data, status) {
-                Log.error("Location Upload Failed");
+            }, function (data) {
+                Log.info("Location Upload Failed");
+                Log.debug(JSON.stringify(data));
 //                markError(location.id);
                 deferred.resolve();
             });

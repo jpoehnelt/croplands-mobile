@@ -3,7 +3,6 @@ angular.module('croplandsApp.services')
         var geoWatch, // global for turning watch on/off
             positions = [], // array of positions
             watchOptions = {
-                frequency: 800, // how often to retrieve a position if possible
                 timeout: 10000, // when to throw an exception
                 enableHighAccuracy: true // use gps for higher resolution and when no network location is available
             }, currentAccuracy = -1, currentAccuracyExpiration;
@@ -14,13 +13,15 @@ angular.module('croplandsApp.services')
         function turnOn() {
             turnOff();
             geoWatch = $cordovaGeolocation.watchPosition(watchOptions);
-
+            Log.debug('[GPS] Watch started.');
             geoWatch.then(
                 null,
                 function (err) {
                     Log.error(err);
-                }, function (position) {
+                },
+                _.throttle(function (position) {
                     if(position && position.coords) {
+                        Log.debug('[GPS] Received Position. ');
                         positions.push(position);
                         $rootScope.$broadcast('GPS.on', position);
                         currentAccuracy = position.coords.accuracy;
@@ -32,7 +33,7 @@ angular.module('croplandsApp.services')
                             currentAccuracy = -1;
                         }, 10000)
                     }
-                }
+                },2000)
             );
         }
 
@@ -43,6 +44,8 @@ angular.module('croplandsApp.services')
             if (isOn()) {
                 $rootScope.$broadcast('GPS.off');
                 geoWatch.clearWatch();
+                Log.debug('[GPS] Watch cleared.');
+
             }
         }
 

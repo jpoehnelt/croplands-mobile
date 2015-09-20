@@ -5,7 +5,16 @@ angular.module('croplandsApp.services')
             watchOptions = {
                 timeout: 10000, // when to throw an exception
                 enableHighAccuracy: true // use gps for higher resolution and when no network location is available
-            }, currentAccuracy = -1, currentAccuracyExpiration;
+            }, currentAccuracy = -1,
+            currentAccuracyExpiration, // timeout
+            MAX_POSITIONS_LENGTH = 150,  // max positions to store
+            POSITION_FREQUENCY = 2000, // frequency for collecting positions, milliseconds
+            CURRENT_ACCURACY_TIMEOUT = 10000; // number of milliseconds that fix is good for
+
+        function rotatePositionsArray() {
+            positions = positions.slice(positions.length - MAX_POSITIONS_LENGTH, positions.length);
+            Log.debug('[GPS] Slicing positions array to length: ' + positions.length.toString());
+        }
 
         /**
          * Creates a watch on geoLocation after close any open watches first.
@@ -21,19 +30,27 @@ angular.module('croplandsApp.services')
                 },
                 _.throttle(function (position) {
                     if(position && position.coords) {
-                        Log.debug('[GPS] Received Position. ');
-                        positions.push(position);
+                        Log.debug('[GPS] Received Position: ' + position.coords.latitude.toString() + ", " + position.coords.longitude.toString());
                         $rootScope.$broadcast('GPS.on', position);
+                        positions.push(position);
+                        
                         currentAccuracy = position.coords.accuracy;
+                        
+                        // limit the current fix accuracy for CURRENT_ACCURACY_TIMEOUT milliseconds
                         if (currentAccuracyExpiration) {
                             $timeout.cancel(currentAccuracyExpiration);
                         }
-
                         currentAccuracyExpiration = $timeout(function () {
                             currentAccuracy = -1;
-                        }, 10000)
+                        }, CURRENT_ACCURACY_TIMEOUT);
+                        
+                        // rotate the array as necessary
+                        Log.debug('[GPS] Positions Length: ' + positions.length.toString());
+                        if (positions.length > MAX_POSITIONS_LENGTH * 2) {
+                            rotatePositionsArray();
+                        }
                     }
-                },2000)
+                }, POSITION_FREQUENCY)
             );
         }
 

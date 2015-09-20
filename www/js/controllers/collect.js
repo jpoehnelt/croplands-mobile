@@ -18,13 +18,14 @@ angular.module('croplandsApp.controllers')
                 lat: null,
                 lon: null,
                 bearing: null,
-                distance: null,
+                distance: 0,
                 source: null,
                 records: [],
                 photos: []
             },
             record: {
-                land_use_type: 0
+                land_use_type: 0,
+                source_type: 'ground'
             },
             choices: {
                 landUse: mappings.landUseType.choices,
@@ -62,7 +63,8 @@ angular.module('croplandsApp.controllers')
 
 
         try {
-            $scope.location.source = _.values($cordovaDevice.getDevice()).join(separator = ',')
+            $scope.location.source = _.values($cordovaDevice.getDevice()).join(separator = ',');
+            $scope.record.source_description = "Mobile Device: " + $scope.location.source;
         }
         catch (e) {
             Log.warning('Could not get device id.')
@@ -82,6 +84,7 @@ angular.module('croplandsApp.controllers')
                 $scope.record.water = $scope.record.water || 0;
                 $scope.record.intensity = $scope.record.intensity || 0;
                 $scope.record.crop_primary = $scope.record.crop_primary || 0;
+                $scope.record.crop_secondary = $scope.record.crop_secondary || 0;
             }
         });
 
@@ -104,7 +107,7 @@ angular.module('croplandsApp.controllers')
             $cordovaCamera.getPicture({ quality: 75,
                 destinationType: Camera.DestinationType.NATIVE_URI,
                 sourceType: Camera.PictureSourceType.CAMERA,
-                saveToPhotoAlbum: true,
+                saveToPhotoAlbum: false,
                 correctOrientation: true,
                 targetWidth: 1000,
                 targetHeight: 1000
@@ -113,7 +116,7 @@ angular.module('croplandsApp.controllers')
                 Log.debug(imageURI);
                 $scope.photos.push(imageURI);
             }, function (err) {
-                Log.info(err);
+                Log.error(err);
             });
 
         };

@@ -21,6 +21,7 @@
     "org.apache.cordova.network-information",
     "org.apache.cordova.camera",
     "cordova-plugin-file",
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-whitelist"
   ]
 }

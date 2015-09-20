@@ -40,31 +40,20 @@
                 Lat: {{ location.lat | number : 8 }} Lon: {{ location.lon | number : 8 }}
             </div>
             <div class="item item-divider">
-                Area Information
+                Location Offset
             </div>
             <div class="item item-button-right">
-                {{getOrientationDegrees()}}
                 Bearing to Center: {{getOrientation()}}{{ location.bearing | number }}
                 <button class="button button-small" ng-click="captureHeading()">Capture</button>
             </div>
-            <!--<label class="item item-input">-->
-            <!--<span class="input-label col-75">Distance to Center</span>-->
-            <!--<input type="number" ng-model="offset" placeholder="meters">-->
-            <!--</label>-->
-            <!--<label class="item item-input item-select">-->
-            <!--<div class="input-label">-->
-            <!--Area Size-->
-            <!--</div>-->
-            <!--<select>-->
-            <!--<option>Unknown</option>-->
-            <!--<option>Small</option>-->
-            <!--<option>Medium</option>-->
-            <!--<option>Large</option>-->
-            <!--</select>-->
-            <!--</label>-->
-
+            <div class="item">
+                Distance to Center: {{ location.distance | number}} meters
+                <div class="range range-balanced">
+                    <input type="range" min="0" max="150" step="5" name="distance" ng-model="location.distance">
+                </div>
+            </div>
             <div class="item item-divider">
-                Land Cover
+                Location Class
             </div>
             <label class="item item-input item-select">
                 <div class="input-label">
@@ -73,27 +62,39 @@
                 <select ng-model="record.land_use_type" ng-options="type.id as type.label for type in choices.landUse">
                 </select>
             </label>
-            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
+            <span ng-show="record.land_use_type == 1">
+            <div class="item item-divider">
+                Crop Information
+            </div>
+            <label class="item item-input item-select">
                 <div class="input-label">
                     Water Source
                 </div>
                 <select ng-model="record.water" ng-options="type.id as type.label for type in choices.water">
                 </select>
             </label>
-            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
+            <label class="item item-input item-select">
                 <div class="input-label">
                     Crop Intensity
                 </div>
                 <select ng-model="record.intensity" ng-options="type.id as type.label for type in choices.intensity">
                 </select>
             </label>
-            <label class="item item-input item-select" ng-show="record.land_use_type == 1">
+            <label class="item item-input item-select">
                 <div class="input-label">
-                    Crop Type
+                    Primary Crop
                 </div>
                 <select ng-model="record.crop_primary" ng-options="type.id as type.label for type in choices.crop">
                 </select>
             </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Secondary Crop
+                </div>
+                <select ng-model="record.crop_secondary" ng-options="type.id as type.label for type in choices.crop">
+                </select>
+            </label>
+                </span>
         </div>
         <div style="padding: 5px">
             <button class="button button-block" ng-click="save()" ng-disabled="!isValid()">

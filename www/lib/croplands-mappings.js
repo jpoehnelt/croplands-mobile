@@ -7,8 +7,8 @@ angular.module('croplands.mappings', [])
                 {'id': 1, 'label': 'Cropland', 'description': 'Cropland is...'},
                 {'id': 2, 'label': 'Forest', 'description': 'Forest is ...'},
                 {'id': 3, 'label': 'Grassland', 'description': 'Desert is ...'},
-                {'id': 4, 'label': 'Desert', 'description': 'Desert is ...'},
-                {'id': 5, 'label': 'Urban', 'description': 'Urban is ...'},
+                {'id': 4, 'label': 'Barren', 'description': 'Desert is ...'},
+                {'id': 5, 'label': 'Builtup', 'description': 'Urban is ...'},
                 {'id': 6, 'label': 'Shrub', 'description': 'Shrub is ...'}
             ]},
 

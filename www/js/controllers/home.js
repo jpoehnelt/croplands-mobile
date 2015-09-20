@@ -11,7 +11,9 @@ angular.module('croplandsApp.controllers')
         };
 
         var help_viewed = window.localStorage.getItem('help_viewed');
-        if (help_viewed !== true) {
+        Log.debug('[HomeCtrl] Help viewed is: ' + help_viewed);
+
+        if (!help_viewed) {
             $state.go('app.help');
         }
     }]);

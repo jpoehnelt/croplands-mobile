@@ -59,6 +59,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             })
             .state('app.home', {
                 url: "/home",
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: "templates/home.html",
@@ -68,6 +69,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             })
             .state('app.map', {
                 url: "/map",
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: "templates/map.html",
@@ -77,6 +79,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             })
             .state('app.collect', {
                 url: "/collect",
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: "templates/collect.html",
@@ -124,21 +127,24 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         });
 
     })
-    .run(['$ionicPlatform', 'GPS','Log','Compass', function ($ionicPlatform, GPS, Log, Compass) {
+    .run(['$ionicPlatform', 'GPS','Log','Compass', 'Settings', function ($ionicPlatform, GPS, Log, Compass, Settings) {
 
         GPS.turnOn();
         Compass.turnOn();
 
         $ionicPlatform.on("resume", function (event) {
-            Log.debug('resume');
+            Log.debug('[App] resume');
             GPS.turnOn();
             Compass.turnOn();
         });
 
         $ionicPlatform.on("pause", function (event) {
-            Log.debug('pause');
-            GPS.turnOff();
-            Compass.turnOff();
-
+            Log.debug('[App] pause');
+            if (!Settings.get('BACKGROUND_GPS')) {
+                GPS.turnOff();
+            }
+            if (!Settings.get('BACKGROUND_COMPASS')) {
+                Compass.turnOff();
+            }
         });
     }]);

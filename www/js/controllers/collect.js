@@ -1,6 +1,39 @@
 angular.module('croplandsApp.controllers')
     .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', 'Compass', '$cordovaDevice', '$window', 'Log', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, Compass, $cordovaDevice, $window, Log, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
 
+        function init() {
+            angular.extend($scope, {
+                gps: {
+                    on: false,
+                    locations: []
+                },
+                location: {
+                    lat: null,
+                    lon: null,
+                    bearing: null,
+                    distance: 0,
+                    source: null,
+                    records: [],
+                    photos: []
+                },
+                record: {
+                    land_use_type: 0,
+                    source_type: 'ground'
+                },
+                choices: {
+                    landUse: mappings.landUseType.choices,
+                    crop: mappings.crop.choices,
+                    intensity: mappings.intensity.choices,
+                    water: mappings.water.choices
+                },
+                messages: Log.messages(),
+                photosEnabled: true,
+                photos: []
+            });
+        }
+
+        init();
+
         if (!GPS.isOn()) {
             GPS.turnOn();
         }
@@ -9,34 +42,7 @@ angular.module('croplandsApp.controllers')
             logPosition(position);
         });
 
-        angular.extend($scope, {
-            gps: {
-                on: false,
-                locations: []
-            },
-            location: {
-                lat: null,
-                lon: null,
-                bearing: null,
-                distance: 0,
-                source: null,
-                records: [],
-                photos: []
-            },
-            record: {
-                land_use_type: 0,
-                source_type: 'ground'
-            },
-            choices: {
-                landUse: mappings.landUseType.choices,
-                crop: mappings.crop.choices,
-                intensity: mappings.intensity.choices,
-                water: mappings.water.choices
-            },
-            messages: Log.messages(),
-            photosEnabled: true,
-            photos: []
-        });
+
 
         try {
             $scope.platform = $cordovaDevice.getPlatform();
@@ -58,6 +64,7 @@ angular.module('croplandsApp.controllers')
         function cleanUp() {
             $scope.gps.on = false;
             $scope.gpsClear();
+            init();
             Log.debug('[CollectCtr] Cleanup complete')
         }
 
@@ -195,7 +202,7 @@ angular.module('croplandsApp.controllers')
 
             // Append record to location.records array
             // Could allow for multiple records with different dates to be added eventually
-            $scope.location.records.push($scope.record);
+            $scope.location.records[0] = $scope.record;
             $scope.gps.on = false;
 
             Location.save($scope.location).then(

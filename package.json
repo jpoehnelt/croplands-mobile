@@ -1,6 +1,6 @@
 {
   "name": "croplands-mobile",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Data for Mapping Global Croplands",
   "dependencies": {
     "gulp": "^3.5.6",

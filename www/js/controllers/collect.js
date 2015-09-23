@@ -205,6 +205,8 @@ angular.module('croplandsApp.controllers')
             $scope.location.records[0] = $scope.record;
             $scope.gps.on = false;
 
+            // cast distance to int
+            $scope.location.distance = parseInt($scope.location.distance, 10);
             Location.save($scope.location).then(
                 function (result) {
                     var photoPromises = [];

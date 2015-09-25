@@ -16,7 +16,6 @@
                 </div>
             </div>
         </div>
-        {{getOrientation()}}
         <div class="list">
             <div class="item item-divider">
                 Location
@@ -95,8 +94,16 @@
                 </select>
             </label>
                 </span>
+            <div class="item item-divider">
+                Quality Control
+            </div>
+            <div class="item item-icon-right" ng-repeat="todo in todoList">
+                <i class="icon ion-checkmark balanced" ng-show="todo.complete"></i>
+                <i class="icon ion-close" ng-hide="todo.complete"></i>
+                {{ todo.message }}</div>
+
         </div>
-        <div style="padding: 5px">
+        <div class="padding-horizontal">
             <button class="button button-block" ng-click="save()" ng-disabled="!isValid()">
                 Save
             </button>

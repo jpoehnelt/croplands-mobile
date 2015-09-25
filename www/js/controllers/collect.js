@@ -1,5 +1,6 @@
 angular.module('croplandsApp.controllers')
     .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', 'Compass', '$cordovaDevice', '$window', 'Log', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, Compass, $cordovaDevice, $window, Log, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
+        var MINIMUM_POINTS = 5;
 
         function init() {
             angular.extend($scope, {
@@ -11,7 +12,7 @@ angular.module('croplandsApp.controllers')
                     lat: null,
                     lon: null,
                     bearing: null,
-                    distance: 0,
+                    distance: null,
                     source: null,
                     records: [],
                     photos: []
@@ -28,7 +29,14 @@ angular.module('croplandsApp.controllers')
                 },
                 messages: Log.messages(),
                 photosEnabled: true,
-                photos: []
+                photos: [],
+                todoList: {
+                    photos: {message: 'Capture a photo of the area.', complete: false},
+                    gps: {message: 'Collect sufficient GPS points.', complete: false},
+                    bearing: {message: 'Capture bearing to center of area.', complete: false},
+                    distance: {message: 'Set distance to center of the area.', complete: false},
+                    landCover: {message: 'Select land cover class.', complete: false}
+                }
             });
         }
 
@@ -140,7 +148,7 @@ angular.module('croplandsApp.controllers')
          * @param position integer
          */
         function logPosition(position) {
-            if (position.coords.accuracy < 150 && $scope.gps.on) {
+            if (position.coords.accuracy < 30 && $scope.gps.on) {
                 Log.info('Captured Position, Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
                 Log.debug('[CollectCtrl] Captured Position, Accuracy: ' + String(Math.round(position.coords.accuracy)) + ' meters');
                 $scope.gps.locations.push({
@@ -180,7 +188,16 @@ angular.module('croplandsApp.controllers')
 
         $scope.isValid = function () {
             // has the user entered the minimum required information
-            return $scope.gps.locations.length && $scope.record.land_use_type;
+            $scope.todo();
+            return _.every($scope.todoList, 'complete', true);
+        };
+
+        $scope.todo = function () {
+            $scope.todoList.gps.complete = $scope.gps.locations.length > MINIMUM_POINTS;
+            $scope.todoList.bearing.complete = $scope.location.bearing !== null;
+            $scope.todoList.distance.complete = $scope.location.distance !== null;
+            $scope.todoList.landCover.complete = $scope.record.land_use_type !== 0;
+            $scope.todoList.photos.complete = $scope.photos.length > 0;
         };
 
         $scope.save = function () {

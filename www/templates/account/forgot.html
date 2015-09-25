@@ -1,0 +1,33 @@
+<ion-view view-title="Forgot">
+    <ion-content>
+        <form name="forgotForm" >
+            <div class="list">
+                <label class="item item-input" ng-hide="success">
+                    <span class="input-label">Email</span>
+                    <input id="email" name="email" type="email"
+                           ng-model="$parent.email"
+                           placeholder="Email" required>
+                </label>
+                <div class="item" ng-if="message.length">
+                    {{ message }}
+                </div>
+            </div>
+            <div class="padding" ng-hide="success">
+                <button class="button button-block button-balanced"
+                        ng-class="{'disabled': busy || !forgotForm.$valid}"
+                        type="submit"
+                        ng-click="forgot()">Send Reset Link
+                </button>
+            </div>
+            {{ email }}
+            <div class="padding">
+                <button class="button button-block button-stable"
+                        ng-click="go('app.login')">Login
+                </button>
+                <button class="button button-block button-stable"
+                        ng-click="go('app.register')">Register
+                </button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

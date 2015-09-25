@@ -31,6 +31,12 @@
                 <ion-item nav-clear menu-close ng-click="go('app.help')">
                     Help
                 </ion-item>
+                <ion-item nav-clear menu-close ng-click="go('app.login')" ng-hide="isLoggedIn()">
+                    Login
+                </ion-item>
+                <ion-item nav-clear menu-close ng-click="logout()" ng-show="isLoggedIn()">
+                    Logout
+                </ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>

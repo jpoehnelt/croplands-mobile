@@ -104,6 +104,29 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                         controller: 'HelpCtrl'
                     }
                 }
+            })
+            .state('app.login', {
+                url: "/login", views: {
+                    'menuContent': {
+                        templateUrl: 'templates/account/login.html',
+                        controller: 'LoginController'
+                    }
+                }
+            })
+            .state('app.register', {
+                url: "/register", views: {
+                    'menuContent': {
+                        templateUrl: 'templates/account/register.html',
+                        controller: 'RegisterController' }
+                }
+            })
+            .state('app.forgot', {
+                url: "/forgot", views: {
+                    'menuContent': {
+                        templateUrl: 'templates/account/forgot.html',
+                        controller: 'ForgotController'
+                    }
+                }
             });
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/home');
@@ -127,7 +150,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         });
 
     })
-    .run(['$ionicPlatform', 'GPS','Log','Compass', 'Settings', function ($ionicPlatform, GPS, Log, Compass, Settings) {
+    .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings', function ($ionicPlatform, GPS, Log, Compass, Settings) {
 
         GPS.turnOn();
         Compass.turnOn();

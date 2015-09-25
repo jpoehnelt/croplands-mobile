@@ -1,35 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $rootScope, GPS, $ionicViewSwitcher) {
-        // Form data for the login modal
-        $scope.loginData = {};
-
-        // Create the login modal that we will use later
-        $ionicModal.fromTemplateUrl('templates/login.html', {
-            scope: $scope
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
-
-        // Triggered in the login modal to close it
-        $scope.closeLogin = function () {
-            $scope.modal.hide();
-        };
-
-        // Open the login modal
-        $scope.login = function () {
-            $scope.modal.show();
-        };
-
-        // Perform the login action when the user submits the login form
-        $scope.doLogin = function () {
-            console.log('Doing login', $scope.loginData);
-
-            // Simulate a login delay. Remove this and replace with your login
-            // code if using a login system
-            $timeout(function () {
-                $scope.closeLogin();
-            }, 1000);
-        };
+    .controller('AppCtrl', function ($scope, $timeout, $state, $cordovaDevice, $cordovaGeolocation, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location) {
 
         $scope.go = function (state) {
             if (state === 'app.home') {
@@ -58,10 +28,36 @@ angular.module('croplandsApp.controllers')
             }
         });
 
+        $scope.isLoggedIn = User.isLoggedIn;
+        $scope.logout = User.logout;
+
         $scope.$on('Compass.heading', function (e, result) {
             $scope.heading = result.trueHeading || result.magneticHeading;
             $scope.ionNavigationIconRotate = 360 - $scope.heading - 45;
         });
 
+        $scope.$watch($cordovaNetwork.getNetwork, networkWatch);
+        $scope.$watch(function () {
+            return $state.current.name;
+        }, networkWatch);
+
+        function networkWatch() {
+            var networkState = $cordovaNetwork.getNetwork();
+
+            if (networkState === 'wifi' || networkState === 'ethernet') {
+                Log.debug('[AppController] Device has network connection.');
+                if (User.isLoggedIn()) {
+                    Log.debug('[AppController] User is logged in.');
+                    Location.sync();
+                } else {
+                    var cannotRedirect = ['app.help', 'app.collect', 'app.login', 'app.forgot', 'app.register'];
+                    Log.debug('[AppController] Current State Name: ' + $state.current.name);
+                    if(!_.contains(cannotRedirect, $state.current.name)) {
+                        Log.debug('[AppController] Redirecting to login page.');
+                        $scope.go('app.login');
+                    }
+                }
+            }
+        }
 
     });

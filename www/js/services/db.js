@@ -64,7 +64,7 @@ angular.module('croplandsApp.services')
 
         return self;
     }])
-    .factory('Location', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', 'Photos', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, Photos) {
+    .factory('Location', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', 'Photos','User', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, Photos,User) {
         var self = this,
             url = 'https://api.croplands.org/api/locations',
             countOfLocations,
@@ -229,15 +229,12 @@ angular.module('croplandsApp.services')
         };
 
         self.canSync = function () {
-            return !self.isBusy() && self.getCountOfLocationsToSync();
-        };
-
-
-        $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-            if (networkState === 'wifi' || networkState === 'ethernet') {
-                self.sync();
+            var canSync = !self.isBusy() && self.getCountOfLocationsToSync() && User.isLoggedIn();
+            if (canSync) {
+                Log.debug('[Location] Able to sync ' + self.getCountOfLocationsToSync() + ' locations.');
             }
-        });
+            return canSync;
+        };
 
         return self;
     }])

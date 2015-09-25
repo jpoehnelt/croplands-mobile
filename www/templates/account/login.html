@@ -1,0 +1,40 @@
+<ion-view view-title="Login">
+    <ion-content>
+        <form name="loginForm">
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input id="email" name="email" type="email"
+                           ng-model="$parent.email"
+                           placeholder="Email" required>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input id="password" name="password"
+                           type="password"
+                           ng-model="$parent.password"
+                           ng-minlength="8"
+                           placeholder="Password" required>
+                </label>
+
+                <div class="item" ng-if="message.length">
+                    {{ message }}
+                </div>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-balanced"
+                        ng-class="{'disabled': busy || !loginForm.$valid}" type="submit"
+                        ng-click="login(loginForm.$valid)">Log in
+                </button>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-stable"
+                        ng-click="go('app.register')">Register
+                </button>
+                <button class="button button-block button-stable"
+                        ng-click="go('app.forgot')">Forgot
+                </button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

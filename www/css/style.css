@@ -57,3 +57,6 @@
 .compass .ion-navigate:before {
     font-size:24px !important;
 }
+.smaller {
+    font-size: smaller !important;
+}

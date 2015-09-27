@@ -1,20 +1,41 @@
 <ion-view view-title="Global Croplands">
-    <ion-content data-tap-disabled="true">
-        <div class="padding">
-            <a class="button button-block" href="#/app/collect">
+    <ion-content scroll>
+        <div class="padding" style="margin:20px 0">
+            <a class="button button-block button-balanced" href="#/app/collect">
                 Collect Data
             </a>
-            <button class="button button-block" ng-click="sync()" ng-disabled="!canSync()">
-                Sync Data
-            </button>
-            <div style="background: #000000; color: #ffffff; border: 1px solid #cccccc; padding: 4px;"
-                 ng-show="messages.length">
-                <ul>
-                    <li class="{{ item.type }}" ng-repeat="item in messages">{{item.message}}
-                    </li>
-                </ul>
-            </div>
+
         </div>
 
+        <div class="list list-inset">
+            <div class="item item-divider item-icon-right" ng-click="showCropTypes = !showCropTypes">
+                <i class="icon smaller ion-chevron-right" ng-show="!showCropTypes"></i>
+                <i class="icon smaller ion-chevron-down" ng-show="showCropTypes"></i>
+                Crop Type
+            </div>
+            <div class="item" ng-repeat="(key, value) in cropTypes" ng-show="showCropTypes">
+                {{ key | mappings: "crop"}}
+                <span class="item-note">{{ value }}</span>
+            </div>
+            <div class="item item-divider item-icon-right" ng-click="showWaterSources = !showWaterSources">
+                <i class="icon smaller ion-chevron-right" ng-show="!showWaterSources"></i>
+                <i class="icon smaller ion-chevron-down" ng-show="showWaterSources"></i>
+                Water Source
+            </div>
+            <div class="item" ng-repeat="(key, value) in waterSources" ng-show="showWaterSources">
+                {{ key | mappings: "water"}}
+                <span class="item-note">{{ value }}</span>
+            </div>
+            <div class="item item-divider item-icon-right" ng-click="showLandUseTypes = !showLandUseTypes">
+                <i class="icon smaller ion-chevron-right" ng-show="!showLandUseTypes"></i>
+                <i class="icon smaller ion-chevron-down" ng-show="showLandUseTypes"></i>
+                Land Cover
+            </div>
+            <div class="item" ng-repeat="(key, value) in landUseTypes" ng-show="showLandUseTypes">
+                {{ key | mappings: "landUseType"}}
+                <span class="item-note">{{ value }}</span>
+            </div>
+
+        </div>
     </ion-content>
 </ion-view>

@@ -148,19 +148,35 @@ angular.module('croplandsApp.services')
         }
 
         self.getAll = function () {
-            return DB.query('SELECT * FROM location WHERE synced >= 0')
+            return DB.query('SELECT * FROM location')
                 .then(function (result) {
-                    return DB.fetchAll(result);
+                    var locations = DB.fetchAll(result);
+                    countOfLocations = locations.length;
+                    return locations;
                 });
         };
 
         self.getAllUnsynced = function () {
             return DB.query('SELECT * FROM location WHERE synced = 0 AND sync_attempts < 10')
                 .then(function (result) {
-                    return DB.fetchAll(result);
+                    var locations = DB.fetchAll(result);
+                    countOfLocationsToSync = locations.length;
+                    return locations;
                 }, function (err) {
                     Log.error('error in query');
                 });
+        };
+
+        self.getAllRecords = function () {
+            var deferred = $q.defer();
+            self.getAll().then(function (locations) {
+                deferred.resolve(_.map(locations, function (location) {
+                    location = JSON.parse(location.json);
+                    return location;
+                }));
+            });
+
+            return deferred.promise;
         };
 
         self.getById = function (id) {
@@ -189,6 +205,7 @@ angular.module('croplandsApp.services')
                     });
                 });
             } else {
+                Log.debug('[Location] Cannot sync right now.');
                 deferred.reject('Already syncing.');
             }
 
@@ -198,7 +215,6 @@ angular.module('croplandsApp.services')
         self.save = function (location) {
             var deferred = $q.defer();
             var query = "INSERT INTO location (lat, lng, json) VALUES (" + location.lat + ", " + location.lon + ",'" + JSON.stringify(location) + "')";
-//            Log.debug(query);
             countOfLocations++;
             countOfLocationsToSync++;
 
@@ -229,12 +245,23 @@ angular.module('croplandsApp.services')
         };
 
         self.canSync = function () {
-            var canSync = !self.isBusy() && self.getCountOfLocationsToSync() && User.isLoggedIn();
-            if (canSync) {
-                Log.debug('[Location] Able to sync ' + self.getCountOfLocationsToSync() + ' locations.');
+            if( self.isBusy()) {
+                Log.debug('[Location] Busy Syncing.');
+                return false;
             }
-            return canSync;
+
+            // Check for locations to sync
+            if (self.getCountOfLocationsToSync() === 0) {
+                return false;
+            } else {
+                Log.debug('[Location] Locations need to be synced.');
+            }
+            return true;
         };
+
+        // init
+        self.getAll();
+        self.getAllUnsynced();
 
         return self;
     }])
@@ -419,12 +446,6 @@ angular.module('croplandsApp.services')
             return true;
 //            return !self.isBusy() && self.getCountOfPhotosToSync();
         };
-
-        $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-            if (networkState === 'wifi' || networkState === 'ethernet') {
-                self.sync();
-            }
-        });
 
         return self;
     }]);

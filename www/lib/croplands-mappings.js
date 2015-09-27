@@ -81,4 +81,12 @@ angular.module('croplands.mappings', [])
             'label': 'Longitude'
         }
 
-    });
+    })
+    .filter('mappings', ['mappings', function (mappings) {
+        return function (key, field) {
+            console.log(key);
+            console.log(field);
+            key = key || 0;
+            return mappings[field].choices[key].label;
+        };
+    }]);

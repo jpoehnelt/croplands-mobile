@@ -122,7 +122,7 @@ angular.module('croplandsApp.controllers')
             $cordovaCamera.getPicture({ quality: 75,
                 destinationType: Camera.DestinationType.NATIVE_URI,
                 sourceType: Camera.PictureSourceType.CAMERA,
-                saveToPhotoAlbum: false,
+                saveToPhotoAlbum: true,
                 correctOrientation: true,
                 targetWidth: 1000,
                 targetHeight: 1000

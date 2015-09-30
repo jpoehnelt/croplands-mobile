@@ -29,7 +29,7 @@ angular.module('croplandsApp.services')
         $http.defaults.headers.put.authorization = 'bearer ' + _user.token;
         $http.defaults.headers.patch.authorization = 'bearer ' + _user.token;
 
-        Log.debug('[User] Authorization Header: ' + $http.defaults.headers.post.authorization);
+//        Log.debug('[User] Authorization Header: ' + $http.defaults.headers.post.authorization);
     }
 
     function isLoggedIn() {

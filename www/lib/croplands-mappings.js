@@ -71,7 +71,10 @@ angular.module('croplands.mappings', [])
                 {'id': 17, 'label': 'Cassava', 'description': ''},
                 {'id': 18, 'label': 'Sugarbeets', 'description': ''},
                 {'id': 19, 'label': 'Palm', 'description': ''},
-                {'id': 20, 'label': 'Others', 'description': ''}
+                {'id': 20, 'label': 'Others', 'description': ''},
+                {'id': 21, 'label': 'Plantations', 'description': ''},
+                {'id': 22, 'label': 'Fallow', 'description': ''},
+                {'id': 23, 'label': 'Tef', 'description': ''}
             ]
         },
         lat: {

@@ -14,7 +14,7 @@ angular.module('croplandsApp.controllers')
             $scope.busy = false;
             $scope.email = '';
         }, function (response) {
-            if (response.description) {
+            if (response && response.description) {
                 setMessage(response.description, false);
             }
             else {

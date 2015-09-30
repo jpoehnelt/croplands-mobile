@@ -24,7 +24,7 @@ angular.module('croplandsApp.controllers')
             $state.go('app.home');
             
         }, function (response) {
-            if (response.description) {
+            if (response && response.description) {
                 setMessage(response.description, false);
             }
             else {

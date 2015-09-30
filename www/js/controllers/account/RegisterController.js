@@ -30,7 +30,7 @@ angular.module('croplandsApp.controllers')
 
             if ($scope.password && $scope.password.length >= 8) {
                 $scope.entropy = zxcvbn($scope.password, obvious).entropy;
-                $scope.passwordIsValid = $scope.entropy > 30;
+                $scope.passwordIsValid = $scope.entropy > 15;
                 $scope.passwordsMatch = $scope.password === $scope.passwordConfirm;
                 Log.debug('[RegisterController] Password entropy: ' + $scope.entropy);
 

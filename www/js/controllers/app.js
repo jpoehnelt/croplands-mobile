@@ -26,6 +26,7 @@ angular.module('croplandsApp.controllers')
             } else {
                 $scope.gpsFix = 'no fix';
             }
+            Log.debug('[GPS] Accuracy: ' + val + ' Fix: ' + $scope.gpsFix);
         });
 
         $scope.isLoggedIn = User.isLoggedIn;

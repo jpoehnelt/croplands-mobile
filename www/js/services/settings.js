@@ -2,7 +2,7 @@ angular.module('croplandsApp.services')
     .factory('Settings', [ function () {
         var DEFAULTS = {
             BACKGROUND_GPS: true,
-            BACKGROUND_COMPASS: true
+            BACKGROUND_COMPASS: false
         };
 
         function get(setting) {

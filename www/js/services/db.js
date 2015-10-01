@@ -115,7 +115,7 @@ angular.module('croplandsApp.services')
                 });
             }, function (data) {
                 Log.info("Location Upload Failed");
-                Log.debug(JSON.stringify(data));
+                Log.error(JSON.stringify(data));
 //                markError(location.id);
                 deferred.resolve();
             });

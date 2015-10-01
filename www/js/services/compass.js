@@ -3,7 +3,7 @@ angular.module('croplandsApp.services')
         var compassWatch, // global for turning watch on/off
             headings = [], // array of positions
             watchOptions = {
-                frequency: 50
+                frequency: 20
             };
 
         /**
@@ -19,6 +19,8 @@ angular.module('croplandsApp.services')
                         Log.error(err);
                     }, function (result) {
                         $rootScope.$broadcast('Compass.heading', result);
+                        headings.push(result);
+                        rotate();
                     }
                 );
             } catch(err) {
@@ -27,8 +29,8 @@ angular.module('croplandsApp.services')
         }
 
         function rotate() {
-            if (headings.length > 100) {
-                headings = headings.slice(10);
+            if (headings.length > 10) {
+                headings = headings.slice(5);
             }
         }
 
@@ -65,11 +67,8 @@ angular.module('croplandsApp.services')
             return headings;
         }
 
-        /**
-         * Check if there is a gps fix and return accuracy. No fix is -1
-         */
         function getHeading() {
-            return $cordovaDeviceOrientation.getCurrentHeading();
+            return headings[headings.length - 1];
         }
 
         // Interface

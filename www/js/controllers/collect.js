@@ -27,7 +27,6 @@ angular.module('croplandsApp.controllers')
                     intensity: mappings.intensity.choices,
                     water: mappings.water.choices
                 },
-                messages: Log.messages(),
                 photosEnabled: true,
                 photos: [],
                 todoList: {
@@ -111,11 +110,13 @@ angular.module('croplandsApp.controllers')
 
         $scope.captureHeading = function () {
             // Save to scope
-            Compass.getHeading().then(function (result) {
-                $scope.location.bearing = result.trueHeading || result.magneticHeading;
-                // Tell the user the heading
-                Log.debug("Heading: " + String($scope.location.bearing));
-            });
+            var result = Compass.getHeading();
+            Log.debug(JSON.stringify(result));
+
+            $scope.location.bearing = result.trueHeading || result.magneticHeading;
+
+            Log.debug("Heading: " + String($scope.location.bearing));
+
         };
 
         $scope.takePhoto = function () {
@@ -199,6 +200,7 @@ angular.module('croplandsApp.controllers')
             $scope.todoList.landCover.complete = $scope.record.land_use_type !== 0;
             $scope.todoList.photos.complete = $scope.photos.length > 0;
         };
+
 
         $scope.save = function () {
             var today = new Date();

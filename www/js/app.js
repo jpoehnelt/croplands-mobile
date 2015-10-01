@@ -176,6 +176,11 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                 Log.error('[App] Database could not be backed up successfully.');
             });
 
+            Backup.backupData().then(function (success) {
+                Log.info('[App] Data backed up to kml and geojson.');
+            }, function (error) {
+                Log.error('[App] Data could not be backed up to kml and geojson.');
+            });
 
         });
     }])

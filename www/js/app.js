@@ -150,7 +150,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         });
 
     })
-    .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings', function ($ionicPlatform, GPS, Log, Compass, Settings) {
+    .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup) {
 
         GPS.turnOn();
         Compass.turnOn();
@@ -169,5 +169,13 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             if (!Settings.get('BACKGROUND_COMPASS')) {
                 Compass.turnOff();
             }
+
+            Backup.backupDB().then(function (success) {
+                Log.info('[App] Database backed up: ' + success.fullPath);
+            }, function (error) {
+                Log.error('[App] Database could not be backed up successfully.');
+            });
+
+
         });
     }]);

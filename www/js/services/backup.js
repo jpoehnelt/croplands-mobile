@@ -1,5 +1,5 @@
 angular.module('croplandsApp.services')
-    .factory('Backup', ['$cordovaFile', '$cordovaDevice', 'Log', 'DB_CONFIG', '$timeout', 'Location', '$filter', function ($cordovaFile, $cordovaDevice, Log, DB_CONFIG, $timeout, Location, $filter) {
+    .factory('Backup', ['$cordovaFile', '$cordovaDevice', 'Log', 'DB_CONFIG', '$timeout', 'Location', '$filter','$q', function ($cordovaFile, $cordovaDevice, Log, DB_CONFIG, $timeout, Location, $filter, $q) {
 
         var platform = $cordovaDevice.getPlatform(),
             backupFolder = 'GlobalCroplands',
@@ -82,19 +82,27 @@ angular.module('croplandsApp.services')
                 messages: Log.messages()
             };
 
-            save('croplands.log', JSON.stringify(log), true).then(function (success) {
-                console.log(success);
-            }, function (error) {
-                console.log(error);
-            });
+            return save('GlobalCroplandsAppLog.json', JSON.stringify(log), true)
 
         }
 
         function getLogFile() {
-            return $cordovaFile.checkFile(directory, join([backupFolder, 'croplands.log']));
+            var deferred = $q.defer();
+
+            createLogFile().then(function () {
+                $cordovaFile.checkFile(directory, join([backupFolder, 'croplands.log'])).then(function (result) {
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
 
-        function backupToShapefile() {
+        function backupData() {
             var shp,
                 geojson = {
                     type: 'FeatureCollection',
@@ -125,12 +133,8 @@ angular.module('croplandsApp.services')
 
                     });
 
-                    console.log(record);
-
                     var temp = _.pick(location, columnsToSaveFromLocation);
                     temp = _.merge(temp, _.pick(location.records[0], columnsToSaveFromRecord));
-
-                    console.log(temp);
 
                     return {
                         type: 'Feature',
@@ -161,14 +165,10 @@ angular.module('croplandsApp.services')
 
         }
 
-        $timeout(function () {
-            backupToShapefile();
-            createLogFile();
-        }, 2000);
-
         return {
             save: save,
             backupDB: backupDB,
+            backupData: backupData,
             getLogFile: getLogFile
         };
     }]);

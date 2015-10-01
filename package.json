@@ -1,28 +1,31 @@
 {
-    "name": "croplands-mobile",
-    "version": "1.4.3",
-    "description": "Data for Mapping Global Croplands",
-    "devDependencies": {
-        "chai": "^3.3.0",
-        "jasmine-core": "^2.3.4",
-        "karma": "^0.13.10",
-        "karma-chai": "^0.1.0",
-        "karma-chrome-launcher": "^0.2.0",
-        "karma-coverage": "^0.5.2",
-        "karma-jasmine": "^0.3.6",
-        "karma-mocha": "^0.2.0",
-        "mocha": "^2.3.3",
-        "phantomjs": "^1.9.18",
-        "shelljs": "^0.3.0"
-    },
-    "cordovaPlugins": [
-        "org.apache.cordova.device-orientation",
-        "org.apache.cordova.device",
-        "com.ionic.keyboard",
-        "org.apache.cordova.network-information",
-        "org.apache.cordova.camera",
-        "cordova-plugin-file",
-        "cordova-plugin-file-transfer",
-        "cordova-plugin-whitelist"
-    ]
+  "name": "croplands-mobile",
+  "version": "1.4.4",
+  "description": "Data for Mapping Global Croplands",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.10",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.5.2",
+    "karma-jasmine": "^0.3.6",
+    "karma-mocha": "^0.2.0",
+    "mocha": "^2.3.3",
+    "phantomjs": "^1.9.18",
+    "shelljs": "^0.3.0"
+  },
+  "cordovaPlugins": [
+    "com.ionic.keyboard",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-camera",
+    "cordova-plugin-device",
+    "cordova-plugin-geolocation",
+    "cordova-plugin-network-information",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-device-orientation",
+    "cordova-sqlite-storage"
+  ]
 }

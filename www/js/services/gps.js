@@ -45,7 +45,7 @@ angular.module('croplandsApp.services')
                         }, CURRENT_ACCURACY_TIMEOUT);
                         
                         // rotate the array as necessary
-                        Log.debug('[GPS] Positions Length: ' + positions.length.toString());
+//                        Log.debug('[GPS] Positions Length: ' + positions.length.toString());
                         if (positions.length > MAX_POSITIONS_LENGTH * 2) {
                             rotatePositionsArray();
                         }

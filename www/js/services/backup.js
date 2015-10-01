@@ -90,7 +90,7 @@ angular.module('croplandsApp.services')
             var deferred = $q.defer();
 
             createLogFile().then(function () {
-                $cordovaFile.checkFile(directory, join([backupFolder, 'croplands.log'])).then(function (result) {
+                $cordovaFile.checkFile(directory, join([backupFolder, 'GlobalCroplandsAppLog.json'])).then(function (result) {
                     deferred.resolve(result);
                 }, function (error) {
                     deferred.reject(error);

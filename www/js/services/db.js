@@ -6,10 +6,10 @@ angular.module('croplandsApp.services')
         self.init = function () {
             // Use self.db = window.sqlitePlugin.openDatabase({name: DB_CONFIG.name}); in production
             if (window.sqlitePlugin) {
-                self.db = window.sqlitePlugin.openDatabase(DB_CONFIG.name, '1.0', 'database2', 1024 * 1024);
+                self.db = window.sqlitePlugin.openDatabase(DB_CONFIG.name, '1.0', 'database2');
             }
             else {
-                self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'database2', 102400 * 1024);
+                self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'database2');
             }
             // for opening a background db:
 
@@ -318,6 +318,8 @@ angular.module('croplandsApp.services')
             // TODO Separate these values from that of the location since they may not be consistent.
 
             options.params = params;
+
+            options.headers = [{'Authorization': 'bearer ' + $http.defaults.headers.post.authorization}];
 
             $cordovaFileTransfer.upload(url, photo.filename, options)
                 .then(function (result) {

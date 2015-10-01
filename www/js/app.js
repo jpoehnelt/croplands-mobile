@@ -178,4 +178,9 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
 
 
         });
+    }])
+    .factory('$exceptionHandler', ['Log', function (Log) {
+        return function (exception, cause) {
+            throw exception;
+        };
     }]);

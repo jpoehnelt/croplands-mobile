@@ -54,30 +54,27 @@ angular.module('croplandsApp.services')
 
         self.exception = function (message, url, line, lineNumber, column, error) {
 
-            message = 'Error: ' + message + ' Script: ' + url + ' Line: ' + lineNumber
+            message = '[Error] ' + message + ' Script: ' + url + ' Line: ' + lineNumber
                 + ' Column: ' + column + ' StackTrace: ' + error;
 
-            $log.error(message);
+            console.log(message);
             log_array.push({
                 message: message,
                 type: 'exception',
                 date: Date.now()
             });
-            rotateLog();
-        };
 
-        window.onerror = function (message, url, line, lineNumber, column, error) {
-//            self.exception(message, url, line, lineNumber, column, error);
-            console.log('[Log] Exception: window.onerror');
+            rotateLog();
+
+            // stop propagation?
             return true;
         };
 
-        console.log(window.onerror);
+        window.onerror = self.exception;
 
         self.messages = function () {
             return log_array;
         };
-
 
         return self;
     }]);

@@ -63,7 +63,7 @@ angular.module('croplandsApp.controllers')
 
             if (connected && !userLoggedIn) {
                 // if current page not in the list of pages the user can visit without login, redirect to login
-                if(!_.contains(cannotRedirect, page)) {
+                if(!_.includes(cannotRedirect, page)) {
                     Log.debug('[AppController] Redirecting to login page.');
                     $scope.go('app.login');
                 }

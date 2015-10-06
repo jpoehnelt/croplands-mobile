@@ -23,7 +23,7 @@ angular.module('croplandsApp.services')
 //                self.query(drop);
                 var query = 'CREATE TABLE IF NOT EXISTS ' + table.name + ' (' + columns.join(',') + ')';
                 self.query(query).then(function (result) {
-                    Log.debug(result);
+                    Log.debug("[DB] " + JSON.stringify(result));
                     return [];
                 }, function (err) {
                     Log.error(err);

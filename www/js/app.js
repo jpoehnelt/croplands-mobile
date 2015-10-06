@@ -170,30 +170,33 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
 
         $ionicPlatform.on("pause", function (event) {
             Log.debug('[App] pause');
+
             if (!Settings.get('BACKGROUND_GPS')) {
                 GPS.turnOff();
-            } else {
-                $timeout(function () {
-                    try{
-                        GPS.turnOff();
-                        Log.info('[App] Idling GPS due to inactivity.');
-                    } catch (e) {
-                        Log.error(e);
-                    }
-                }, 1000 * 60 * 3); // 5 minutes
             }
+//            else {
+//                $timeout(function () {
+//                    try{
+//                        GPS.turnOff();
+//                        Log.info('[App] Idling GPS due to inactivity.');
+//                    } catch (e) {
+//                        Log.error(e);
+//                    }
+//                }, 1000 * 60 * 3); // 5 minutes
+//            }
             if (!Settings.get('BACKGROUND_COMPASS')) {
                 Compass.turnOff();
-            }else {
-                $timeout(function () {
-                    try{
-                        Compass.turnOff();
-                        Log.info('[App] Idling Compass due to inactivity.');
-                    } catch (e) {
-                        Log.error(e);
-                    }
-                }, 1000 * 60 * 1); // 5 minutes
             }
+//            else {
+//                $timeout(function () {
+//                    try{
+//                        Compass.turnOff();
+//                        Log.info('[App] Idling Compass due to inactivity.');
+//                    } catch (e) {
+//                        Log.error(e);
+//                    }
+//                }, 1000 * 60 * 1); // 5 minutes
+//            }
 
             Backup.backupDB().then(function (success) {
                 Log.info('[Backup] Database backed up: ' + success.fullPath);

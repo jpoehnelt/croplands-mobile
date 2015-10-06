@@ -150,30 +150,55 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         });
 
     })
-    .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup) {
+    .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup','$timeout', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup, $timeout) {
+        var deviceWatchDelay = 500;
 
-        GPS.turnOn();
-        Compass.turnOn();
+        $timeout(function () {
+            GPS.turnOn();
+            Compass.turnOn();
+        }, deviceWatchDelay);
 
         $ionicPlatform.on("resume", function (event) {
             Log.debug('[App] resume');
-            GPS.turnOn();
-            Compass.turnOn();
+
+            $timeout(function () {
+                GPS.turnOn();
+                Compass.turnOn();
+            }, deviceWatchDelay);
+
         });
 
         $ionicPlatform.on("pause", function (event) {
             Log.debug('[App] pause');
             if (!Settings.get('BACKGROUND_GPS')) {
                 GPS.turnOff();
+            } else {
+                $timeout(function () {
+                    try{
+                        GPS.turnOff();
+                        Log.info('[App] Idling GPS due to inactivity.');
+                    } catch (e) {
+                        Log.error(e);
+                    }
+                }, 1000 * 60 * 3); // 5 minutes
             }
             if (!Settings.get('BACKGROUND_COMPASS')) {
                 Compass.turnOff();
+            }else {
+                $timeout(function () {
+                    try{
+                        Compass.turnOff();
+                        Log.info('[App] Idling Compass due to inactivity.');
+                    } catch (e) {
+                        Log.error(e);
+                    }
+                }, 1000 * 60 * 1); // 5 minutes
             }
 
             Backup.backupDB().then(function (success) {
-                Log.info('[App] Database backed up: ' + success.fullPath);
+                Log.info('[Backup] Database backed up: ' + success.fullPath);
             }, function (error) {
-                Log.error('[App] Database could not be backed up successfully.');
+                Log.error('[Backup] Database could not be backed up successfully.');
             });
 
             Backup.backupData();
@@ -184,4 +209,19 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         return function (exception, cause) {
             throw exception;
         };
+    }])
+    .run([function () {
+//        var push = PushNotification.init({ "android": {"senderID": "349842456478", "icon": "notif", "iconColor": "#0e8800", "forceShow": true}} );
+//
+//        push.on('registration', function(data) {
+//            window.localStorage.setItem('notificationRegistrationId', data.registrationId);
+//        });
+//
+//        push.on('notification', function(data) {
+//            console.log(data);
+//        });
+//
+//        push.on('error', function(e) {
+//            console.log(data);
+//        });
     }]);

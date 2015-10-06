@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('HomeCtrl', ['$scope', '$state', 'Location', '$cordovaNetwork', 'Log','$cordovaSocialSharing','Backup', function ($scope, $state, Location, $cordovaNetwork, Log, $cordovaSocialSharing, Backup) {
+    .controller('HomeCtrl', ['$scope', '$state', 'Location', '$cordovaNetwork', 'Log','$cordovaSocialSharing','Backup','$interval', '$q', function ($scope, $state, Location, $cordovaNetwork, Log, $cordovaSocialSharing, Backup, $interval, $q) {
         angular.extend($scope, {
             messages: Log.messages(),
             countOfLocations: Location.getCountOfLocations,
@@ -7,8 +7,7 @@ angular.module('croplandsApp.controllers')
             records: [],
             landCover: {},
             cropTypes: {},
-            waterSources: {},
-            showCropTypes: true
+            waterSources: {}
         });
 
         function getAllLocations() {
@@ -52,21 +51,42 @@ angular.module('croplandsApp.controllers')
             return Location.getCountOfLocations();
         }, getAllLocations);
 
-        $scope.sendLogs = function () {
-            Backup.getLogFile().then(function (result) {
 
-                $cordovaSocialSharing
-                    .share('Log for Global Croplands App', '', result.nativeURL) // Share via native share sheet
-                    .then(function(result) {
-                        console.log()
-                    }, function(err) {
-                        // An error occured. Show a message to the user
-                    });
-            }, function (error) {
-                Log.error(error);
-            });
-
+        /// Application Files ///
+        $scope.share = function(fileEntry) {
+            $cordovaSocialSharing
+                .share(fileEntry.name, null, fileEntry.nativeURL)
+                .then(function(result) {
+                    Log.info('[HomeCtrl] Shared ' + fileEntry.name);
+                }, function(error) {
+                    Log.error(error);
+                });
         };
+
+        function updateFiles() {
+            var logs = Backup.backupLog(),
+                data = Backup.backupData(),
+                db = Backup.backupDB();
+
+            return $q.all([logs, data, db]);
+        }
+
+        function getFileList() {
+            updateFiles().then(function (success) {
+                Backup.listFiles().then(function (files) {
+                    $scope.files = files;
+                }, function (e) {
+                    Log.error(e);
+                });
+            }, function (e) {
+                Log.error(e);
+            });
+        }
+
+        getFileList();
+        $interval(getFileList, 1000*60);
+
+        ///  End Application Files ///
 
         var help_viewed = window.localStorage.getItem('help_viewed');
         Log.debug('[HomeCtrl] Help viewed is: ' + help_viewed);
@@ -77,5 +97,4 @@ angular.module('croplandsApp.controllers')
 
         // init
         getAllLocations();
-
     }]);

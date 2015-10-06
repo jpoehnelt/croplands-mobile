@@ -38,10 +38,19 @@
 
         </div>
 
-        <div class="padding" style="margin:20px 0">
-            <button class="button button-block button-stable" ng-click="sendLogs()">
-                Send Logs
-            </button>
+        <div class="list list-inset">
+            <div class="item item-divider item-icon-right" ng-click="showFiles = !showFiles">
+                <i class="icon smaller ion-chevron-right" ng-show="!showFiles"></i>
+                <i class="icon smaller ion-chevron-down" ng-show="showFiles"></i>
+               Application Files
+            </div>
+            <span ng-show="showFiles">
+                <div class="item item-icon-right" ng-repeat="file in files" ng-click="share(file);">
+                    {{ file.name }}
+                    <i class="icon ion-share"></i>
+                </div>
+            </span>
         </div>
+
     </ion-content>
 </ion-view>

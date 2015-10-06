@@ -34,7 +34,6 @@ angular.module('croplandsApp.services')
 
         function save(filename, data, replace) {
             var file = join([backupFolder, filename]);
-            console.log(file);
             return buildFolders().then(function () {
                 return $cordovaFile.createFile(directory, file, true).then(function () {
                     Log.info('[Backup] Creating: ' + filename);
@@ -77,7 +76,7 @@ angular.module('croplandsApp.services')
 //           console.log(error);
         });
 
-        function createLogFile() {
+        function backupLog() {
             var log = {
                 messages: Log.messages()
             };
@@ -86,36 +85,21 @@ angular.module('croplandsApp.services')
 
         }
 
-        function getLogFile() {
-            var deferred = $q.defer();
-
-            createLogFile().then(function () {
-                $cordovaFile.checkFile(directory, join([backupFolder, 'GlobalCroplandsAppLog.json'])).then(function (result) {
-                    deferred.resolve(result);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-            }, function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }
 
         function backupData() {
-            var shp,
+            var deferred = $q.defer(),
                 geojson = {
                     type: 'FeatureCollection',
                     features: [
                     ]
                 };
+
             Location.getAll().then(function (locations) {
                 var columnsToSaveFromLocation = ['bearing', 'country', 'date_created', 'distance', 'lat', 'lon', 'original_lat', 'original_lon', 'source', 'synced', 'id'];
                 var columnsToSaveFromRecord = ['crop_primary', 'crop_secondary', 'intensity', 'water', 'land_use_type'];
 
                 geojson.features = _.map(locations, function (location) {
                     location = _.merge(location, JSON.parse(location.json));
-
 
                     var record = _.mapKeys(_.pick(location.records[0], columnsToSaveFromRecord), function (value, key) {
                         var field = key;
@@ -147,28 +131,63 @@ angular.module('croplandsApp.services')
                 });
 
 
-                save('locations.json', geojson, true).then(function (success) {
-                    console.log(success);
-                }, function (error) {
-                    console.log(error);
+                var json = save('locations.json', geojson, true);
+                var kml = save('locations.kml', tokml(geojson), true);
+
+                $q.all([json, kml]).then(function (result) {
+                    deferred.resolve(result);
+                }, function (e) {
+                    deferred.reject(e);
                 });
 
-                save('locations.kml', tokml(geojson), true).then(function (success) {
-                    console.log(success);
-                }, function (error) {
-                    console.log(error);
-                });
 
             }, function (error) {
                 Log.error(error);
             });
 
+            return deferred.promise;
+
+        }
+
+        function listFiles() {
+            var files = [],
+                deferred = $q.defer();
+
+            try {
+                $cordovaFile.checkDir(directory, backupFolder).then(function (dirEntry) {
+                    var dirReader = dirEntry.createReader();
+
+                    Log.info('[Backup] Reading files in ' + dirEntry.fullPath);
+
+                    var readEntries = function () {
+                        dirReader.readEntries( function (results) {
+                            if(results.length) {
+                                files = files.concat(results);
+                                readEntries();
+                            } else {
+                                deferred.resolve(files);
+                            }
+                        }, function (error) {
+                            deferred.reject(e);
+                        });
+                    };
+
+                    // start recursive reading here, warning slow for deep structures
+                    readEntries();
+
+                }, function (e) {
+                    deferred.reject(e);
+                });
+            } catch (e) {
+                deferred.reject(e);
+            }
+            return deferred.promise;
         }
 
         return {
-            save: save,
             backupDB: backupDB,
             backupData: backupData,
-            getLogFile: getLogFile
+            backupLog: backupLog,
+            listFiles: listFiles
         };
     }]);

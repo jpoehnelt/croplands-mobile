@@ -1,6 +1,6 @@
 {
   "name": "croplands-mobile",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Data for Mapping Global Croplands",
   "devDependencies": {
     "chai": "^3.3.0",
@@ -20,12 +20,12 @@
     "cordova-plugin-file",
     "cordova-plugin-file-transfer",
     "cordova-plugin-whitelist",
-    "cordova-plugin-camera",
     "cordova-plugin-device",
     "cordova-plugin-geolocation",
     "cordova-plugin-network-information",
     "cordova-plugin-splashscreen",
     "cordova-plugin-device-orientation",
-    "cordova-sqlite-storage"
+    "cordova-sqlite-storage",
+    "cordova-plugin-camera"
   ]
 }

@@ -30,7 +30,7 @@ angular.module('croplandsApp.services')
                 },
                 _.throttle(function (position) {
                     if(position && position.coords) {
-                        Log.debug('[GPS] Received Position: ' + position.coords.latitude.toString() + ", " + position.coords.longitude.toString());
+                        Log.debug('[GPS] Received Position: ' + position.coords.latitude.toString() + ", " + position.coords.longitude.toString() + ", Accuracy: " + Math.round(position.coords.accuracy));
                         $rootScope.$broadcast('GPS.on', position);
                         positions.push(position);
                         

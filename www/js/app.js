@@ -151,53 +151,73 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
 
     })
     .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup','$timeout', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup, $timeout) {
-        var deviceWatchDelay = 500;
+        var deviceWatchDelay = 100, compassTimeout, gpsTimeout;
 
-        $timeout(function () {
-            GPS.turnOn();
-            Compass.turnOn();
-        }, deviceWatchDelay);
+        function cancelTimeouts() {
+            Log.debug('[App] Canceling timeouts.');
+            if (gpsTimeout) {
+                $timeout.cancel(gpsTimeout);
+            }
+            if (compassTimeout) {
+                $timeout.cancel(compassTimeout);
+            }
+        }
 
-        $ionicPlatform.on("resume", function (event) {
-            Log.debug('[App] resume');
+        function activateSensors() {
+            cancelTimeouts();
 
-            $timeout(function () {
-                GPS.turnOn();
-                Compass.turnOn();
+            gpsTimeout = $timeout(function () {
+                try{
+                    GPS.turnOn();
+                    Log.info('[App] Activating GPS.');
+                } catch (e) {
+                    Log.error(e);
+                }
             }, deviceWatchDelay);
 
-        });
+            compassTimeout = $timeout(function () {
+                try{
+                    Compass.turnOn();
+                    Log.info('[App] Activating Compass.');
+                } catch (e) {
+                    Log.error(e);
+                }
+            }, deviceWatchDelay);
+        }
 
-        $ionicPlatform.on("pause", function (event) {
-            Log.debug('[App] pause');
+        function deactivateSensors() {
+            cancelTimeouts();
 
             if (!Settings.get('BACKGROUND_GPS')) {
                 GPS.turnOff();
             }
-//            else {
-//                $timeout(function () {
-//                    try{
-//                        GPS.turnOff();
-//                        Log.info('[App] Idling GPS due to inactivity.');
-//                    } catch (e) {
-//                        Log.error(e);
-//                    }
-//                }, 1000 * 60 * 3); // 5 minutes
-//            }
+            else {
+                gpsTimeout = $timeout(function () {
+                    try{
+                        GPS.turnOff();
+                        Log.info('[App] Idling GPS due to inactivity.');
+                    } catch (e) {
+                        Log.error(e);
+                    }
+                }, 1000 * 60 * 3); // 3 minutes
+            }
+
             if (!Settings.get('BACKGROUND_COMPASS')) {
                 Compass.turnOff();
             }
-//            else {
-//                $timeout(function () {
-//                    try{
-//                        Compass.turnOff();
-//                        Log.info('[App] Idling Compass due to inactivity.');
-//                    } catch (e) {
-//                        Log.error(e);
-//                    }
-//                }, 1000 * 60 * 1); // 5 minutes
-//            }
+            else {
+                compassTimeout = $timeout(function () {
+                    try{
+                        Compass.turnOff();
+                        Log.info('[App] Idling Compass due to inactivity.');
+                    } catch (e) {
+                        Log.error(e);
+                    }
+                }, 1000 * 60); // 1 minute
+            }
+        }
 
+        function backup() {
             Backup.backupDB().then(function (success) {
                 Log.info('[Backup] Database backed up: ' + success.fullPath);
             }, function (error) {
@@ -205,8 +225,19 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             });
 
             Backup.backupData();
+        }
 
+        $ionicPlatform.on("resume", function (event) {
+            Log.debug('[App] resume');
+            activateSensors();
         });
+
+        $ionicPlatform.on("pause", function (event) {
+            Log.debug('[App] pause');
+            deactivateSensors();
+            backup();
+        });
+
     }])
     .factory('$exceptionHandler', ['Log', function (Log) {
         return function (exception, cause) {

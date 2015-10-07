@@ -54,13 +54,15 @@ angular.module('croplandsApp.controllers')
 
         /// Application Files ///
         $scope.share = function(fileEntry) {
-            $cordovaSocialSharing
-                .share(fileEntry.name, null, fileEntry.nativeURL)
-                .then(function(result) {
-                    Log.info('[HomeCtrl] Shared ' + fileEntry.name);
-                }, function(error) {
-                    Log.error(error);
-                });
+            updateFiles().then(function (success) {
+                $cordovaSocialSharing
+                    .share(fileEntry.name, null, fileEntry.nativeURL)
+                    .then(function(result) {
+                        Log.info('[HomeCtrl] Shared ' + fileEntry.name);
+                    }, function(error) {
+                        Log.error(error);
+                    });
+            });
         };
 
         function updateFiles() {
@@ -84,7 +86,7 @@ angular.module('croplandsApp.controllers')
         }
 
         getFileList();
-        $interval(getFileList, 1000*60);
+        $interval(getFileList, 1000*60*60);
 
         ///  End Application Files ///
 

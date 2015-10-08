@@ -151,7 +151,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
 
     })
     .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup','$timeout', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup, $timeout) {
-        var deviceWatchDelay = 100, compassTimeout, gpsTimeout;
+        var deviceWatchDelay = 10, compassTimeout, gpsTimeout;
 
         function cancelTimeouts() {
             Log.debug('[App] Canceling timeouts.');
@@ -237,6 +237,8 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
             deactivateSensors();
             backup();
         });
+
+        activateSensors();
 
     }])
     .factory('$exceptionHandler', ['Log', function (Log) {

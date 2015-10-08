@@ -1,6 +1,6 @@
 {
   "name": "croplands-mobile",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "Data for Mapping Global Croplands",
   "devDependencies": {
     "chai": "^3.3.0",

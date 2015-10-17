@@ -109,13 +109,15 @@ angular.module('croplandsApp.controllers')
 
 
         $scope.captureHeading = function () {
-            // Save to scope
             var result = Compass.getHeading();
-            Log.debug(JSON.stringify(result));
 
-            $scope.location.bearing = result.trueHeading || result.magneticHeading;
-
-            Log.debug("Heading: " + String($scope.location.bearing));
+            if (result) {
+                Log.debug(JSON.stringify(result));
+                $scope.location.bearing = result.trueHeading || result.magneticHeading;
+                Log.debug("[CollectCtrl] Heading: " + String($scope.location.bearing));
+            } else {
+                Log.error('[CollectCtrl] No compass reading available.');
+            }
 
         };
 
@@ -195,12 +197,17 @@ angular.module('croplandsApp.controllers')
 
         $scope.todo = function () {
             $scope.todoList.gps.complete = $scope.gps.locations.length > MINIMUM_POINTS;
-            $scope.todoList.bearing.complete = $scope.location.bearing !== null;
-            $scope.todoList.distance.complete = $scope.location.distance !== null;
             $scope.todoList.landCover.complete = $scope.record.land_use_type !== 0;
             $scope.todoList.photos.complete = $scope.photos.length > 0;
-        };
+            $scope.todoList.distance.complete = $scope.location.distance !== null;
 
+            // if distance to center is zero, bearing doesn't matter
+            if ($scope.location.distance === '0') {
+                $scope.todoList.bearing.complete = true;
+            } else {
+                $scope.todoList.bearing.complete = $scope.location.bearing !== null;
+            }
+        };
 
         $scope.save = function () {
             var today = new Date();

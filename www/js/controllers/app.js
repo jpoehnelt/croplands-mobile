@@ -37,14 +37,23 @@ angular.module('croplandsApp.controllers')
             $scope.ionNavigationIconRotate = 360 - $scope.heading - 45;
         });
 
+        function getNetwork() {
+            var network;
+            try {
+                network = $cordovaNetwork.getNetwork();
+            } catch (e) {
+                network = 'unknown';
+            }
+            return network;
+        }
 
         $scope.$watch(function () {
-            return [$state.current.name, User.isLoggedIn(), $cordovaNetwork.getNetwork()];
+            return [$state.current.name, User.isLoggedIn(), getNetwork()];
         }, watch, true);
 
         $interval(function () {
             Log.debug('[AppController] Interval Check.');
-            watch([$state.current.name, User.isLoggedIn(), $cordovaNetwork.getNetwork()]);
+            watch([$state.current.name, User.isLoggedIn(), getNetwork()]);
         }, 1000*300, 0);
 
         function watch(args) {

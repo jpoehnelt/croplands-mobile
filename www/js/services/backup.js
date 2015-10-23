@@ -1,9 +1,14 @@
 angular.module('croplandsApp.services')
-    .factory('Backup', ['$cordovaFile', '$cordovaDevice', 'Log', 'DB_CONFIG', '$timeout', 'Location', '$filter','$q', function ($cordovaFile, $cordovaDevice, Log, DB_CONFIG, $timeout, Location, $filter, $q) {
+    .factory('Backup', ['$cordovaFile', '$cordovaDevice', 'Log', 'DB_CONFIG', '$timeout', 'Location', '$filter', '$q', function ($cordovaFile, $cordovaDevice, Log, DB_CONFIG, $timeout, Location, $filter, $q) {
 
-        var platform = $cordovaDevice.getPlatform(),
-            backupFolder = 'GlobalCroplands',
-            directory;
+        var backupFolder = 'GlobalCroplands',
+            directory, platform;
+
+        try {
+            platform = $cordovaDevice.getPlatform();
+        } catch (e) {
+            Log.error(e);
+        }
 
         if (platform === 'Android') {
             directory = cordova.file.externalRootDirectory;
@@ -14,7 +19,12 @@ angular.module('croplandsApp.services')
         }
 
         function buildFolders() {
-            return $cordovaFile.createDir(directory, 'GlobalCroplands', false);
+            try {
+                return $cordovaFile.createDir(directory, 'GlobalCroplands', false);
+            } catch (e) {
+                Log.error(e);
+            }
+
         }
 
         function join(paths) {
@@ -34,32 +44,80 @@ angular.module('croplandsApp.services')
 
         function save(filename, data, replace) {
             var file = join([backupFolder, filename]);
-            return buildFolders().then(function () {
-                return $cordovaFile.createFile(directory, file, true).then(function () {
-                    Log.info('[Backup] Creating: ' + filename);
-                    return $cordovaFile.writeFile(directory, file, data, replace);
+            var deferred = $q.defer();
+
+            // TODO: DONT REPEAT YOURSELF and improve error handling
+            try {
+                buildFolders().then(function () {
+                    $cordovaFile.createFile(directory, file, true).then(function () {
+                        Log.info('[Backup] Creating: ' + filename);
+                        $cordovaFile.writeFile(directory, file, data, replace).then(function (success) {
+                            deferred.resolve(succes);
+                        }, function (e) {
+                            deferred.reject(e);
+                        });
+                    }, function () {
+                        Log.info('[Backup] File Already Exists: ' + filename);
+                        $cordovaFile.writeFile(directory, file, data, replace).then(function (success) {
+                            deferred.resolve(succes);
+                        }, function (e) {
+                            deferred.reject(e);
+                        });
+                    });
                 }, function () {
-                    Log.info('[Backup] File Already Exists: ' + filename);
-                    return $cordovaFile.writeFile(directory, file, data, replace);
+                    $cordovaFile.createFile(directory, file, true).then(function () {
+                        Log.info('[Backup] Creating: ' + filename);
+                        $cordovaFile.writeFile(directory, file, data, replace).then(function (success) {
+                            deferred.resolve(success);
+                        }, function (e) {
+                            deferred.reject(e);
+                        });
+                    }, function () {
+                        Log.info('[Backup] File Already Exists: ' + filename);
+                        $cordovaFile.writeFile(directory, file, data, replace).then(function (success) {
+                            deferred.resolve(success);
+                        }, function (e) {
+                            deferred.reject(e);
+                        });
+                    });
                 });
-            }, function () {
-                return $cordovaFile.createFile(directory, file, true).then(function () {
-                    Log.info('[Backup] Creating: ' + filename);
-                    return $cordovaFile.writeFile(directory, file, data, replace);
-                }, function () {
-                    Log.info('[Backup] File Already Exists: ' + filename);
-                    return $cordovaFile.writeFile(directory, file, data, replace);
-                });
-            });
+            } catch (e) {
+                deferred.reject(e);
+            }
+
+            return deferred.promise;
         }
 
         function removeDb() {
-            return $cordovaFile.removeFile(directory, join([backupFolder, 'database', DB_CONFIG.name + '.sqlite']));
+            var deferred = $q.defer();
+            try {
+                $cordovaFile.removeFile(directory, join([backupFolder, 'database', DB_CONFIG.name + '.sqlite']))
+                    .then(function (success) {
+                        deferred.resolve(success);
+                    }, function (e) {
+                        deferred.reject(e);
+                    });
+            } catch (e) {
+                deferred.reject(e);
+            }
+
+            return deferred.promise;
         }
 
         function copyDB() {
-            return $cordovaFile.copyFile(cordova.file.applicationStorageDirectory, join(['databases', DB_CONFIG.name]),
-                directory, join([backupFolder, DB_CONFIG.name + '.sqlite']));
+            var deferred = $q.defer();
+            try {
+                $cordovaFile.copyFile(cordova.file.applicationStorageDirectory, join(['databases', DB_CONFIG.name]),
+                    directory, join([backupFolder, DB_CONFIG.name + '.sqlite'])).then(function (success) {
+                        deferred.resolve(success);
+                    }, function (e) {
+                        deferred.reject(e);
+                    });
+            } catch (e) {
+                deferred.reject(e);
+            }
+
+            return deferred.promise;
         }
 
         function backupDB() {
@@ -69,12 +127,6 @@ angular.module('croplandsApp.services')
                 return copyDB();
             });
         }
-
-        buildFolders().then(function (success) {
-//           console.log(success);
-        }, function (error) {
-//           console.log(error);
-        });
 
         function backupLog() {
             var log = {
@@ -160,8 +212,8 @@ angular.module('croplandsApp.services')
                     Log.info('[Backup] Reading files in ' + dirEntry.fullPath);
 
                     var readEntries = function () {
-                        dirReader.readEntries( function (results) {
-                            if(results.length) {
+                        dirReader.readEntries(function (results) {
+                            if (results.length) {
                                 files = files.concat(results);
                                 readEntries();
                             } else {

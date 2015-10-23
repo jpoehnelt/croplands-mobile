@@ -2,44 +2,40 @@ angular.module('croplandsApp.controllers')
     .controller('CollectCtrl', ['$scope', '$stateParams', '$timeout', 'mappings', 'Location', '$cordovaCamera', '$cordovaGeolocation', 'Compass', '$cordovaDevice', '$window', 'Log', '$state', '$cordovaNetwork', '$cordovaFile', 'Photos', '$q', 'GPS', function ($scope, $stateParams, $timeout, mappings, Location, $cordovaCamera, $cordovaGeolocation, Compass, $cordovaDevice, $window, Log, $state, $cordovaNetwork, $cordovaFile, Photos, $q, GPS) {
         var MINIMUM_POINTS = 5;
 
-        function init() {
-            angular.extend($scope, {
-                gps: {
-                    on: false,
-                    locations: []
-                },
-                location: {
-                    lat: null,
-                    lon: null,
-                    bearing: null,
-                    distance: null,
-                    source: null,
-                    records: [],
-                    photos: []
-                },
-                record: {
-                    land_use_type: 0,
-                    source_type: 'ground'
-                },
-                choices: {
-                    landUse: mappings.landUseType.choices,
-                    crop: mappings.crop.choices,
-                    intensity: mappings.intensity.choices,
-                    water: mappings.water.choices
-                },
-                photosEnabled: true,
-                photos: [],
-                todoList: {
-                    photos: {message: 'Capture a photo of the area.', complete: false},
-                    gps: {message: 'Collect sufficient GPS points.', complete: false},
-                    bearing: {message: 'Capture bearing to center of area.', complete: false},
-                    distance: {message: 'Set distance to center of the area.', complete: false},
-                    landCover: {message: 'Select land cover class.', complete: false}
-                }
-            });
-        }
-
-        init();
+        angular.extend($scope, {
+            gps: {
+                on: false,
+                locations: []
+            },
+            location: {
+                lat: null,
+                lon: null,
+                bearing: null,
+                distance: null,
+                source: null,
+                records: [],
+                photos: []
+            },
+            record: {
+                land_use_type: 0,
+                source_type: 'ground'
+            },
+            choices: {
+                landUse: mappings.landUseType.choices,
+                crop: mappings.crop.choices,
+                intensity: mappings.intensity.choices,
+                water: mappings.water.choices
+            },
+            photosEnabled: true,
+            photos: [],
+            todoList: {
+                photos: {message: 'Capture a photo of the area.', complete: false},
+                gps: {message: 'Collect sufficient GPS points.', complete: false},
+                bearing: {message: 'Capture bearing to center of area.', complete: false},
+                distance: {message: 'Set distance to center of the area.', complete: false},
+                landCover: {message: 'Select land cover class.', complete: false}
+            }
+        });
 
         if (!GPS.isOn()) {
             GPS.turnOn();
@@ -202,7 +198,7 @@ angular.module('croplandsApp.controllers')
             $scope.todoList.distance.complete = $scope.location.distance !== null;
 
             // if distance to center is zero, bearing doesn't matter
-            if ($scope.location.distance === '0') {
+            if (parseInt($scope.location.distance, 10) === 0) {
                 $scope.todoList.bearing.complete = true;
             } else {
                 $scope.todoList.bearing.complete = $scope.location.bearing !== null;

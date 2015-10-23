@@ -15,12 +15,25 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'www/lib/ionic/js/ionic.bundle.min.js',
-            'www/lib/*.js',
-            'www/lib/**/*.js',
+            'www/lib/angular.js',
+            'www/lib/angular-animate.js',
+            'www/lib/angular-mocks.js',
+            'www/lib/angular-resource.js',
+            'www/lib/angular-sanitize.js',
+            'www/lib/angular-ui-router.js',
+            'www/lib/ionic.js',
+            'www/lib/ionic-angular.js',
+            'www/lib/croplands-mappings.js',
+            'www/lib/ng-cordova.min.js',
+            'www/lib/lodash.js',
+            'www/lib/tokml.js',
+            'www/lib/zxcvbn.js',
             'www/js/*.js',
             'www/js/**/*.js',
-            'tests/*.js'
+            'tests/*.js',
+            'tests/**/*.js',
+            '**/*.html'
+
         ],
 
 
@@ -36,7 +49,13 @@ module.exports = function (config) {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            'www/js/**/*.js': ['coverage']
+            'www/js/**/*.js': ['coverage'],
+            '**/*.html': ['ng-html2js']
+        },
+
+        ngHtml2JsPreprocessor: {
+            stripPrefix: 'www/',
+            moduleName: 'templates'
         },
 
         // web server port

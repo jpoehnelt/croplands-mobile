@@ -19,9 +19,11 @@ describe('Collect Controller', function () {
             expect(true).toBe(true);
         });
         it('todo list should not be complete at start', function () {
-            _.each(scope.todoList, function (task) {
-                expect(task.complete).toBe(false);
-            });
+//            _.each(scope.todoList, function (task) {
+//                console.log(task);
+//                expect(task.complete).toBe(false);
+//            });
+            expect(scope.isValid()).toBe(false);
             console.log('todo list should not be complete at start');
         });
 //

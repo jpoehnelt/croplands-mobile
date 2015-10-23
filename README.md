@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/justinwp/croplands.png?label=ready&title=Ready)](https://waffle.io/justinwp/croplands)
-[![Build Status](https://travis-ci.org/justinwp/croplands-mobile.svg)](https://travis-ci.org/justinwp/croplands) [![Coverage Status](https://coveralls.io/repos/justinwp/croplands-mobile/badge.svg)](https://coveralls.io/r/justinwp/croplands) 
+[![Build Status](https://travis-ci.org/justinwp/croplands-mobile.svg)](https://travis-ci.org/justinwp/croplands-mobile) [![Coverage Status](https://coveralls.io/repos/justinwp/croplands-mobile/badge.svg)](https://coveralls.io/r/justinwp/croplands-mobile) 
 
 
 ##Global Food Security-Support Analysis Data##

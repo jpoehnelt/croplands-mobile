@@ -4,9 +4,10 @@
 module.exports = function (config) {
     config.set({
 
+        browserNoActivityTimeout: 60000,
+
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
-
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -30,7 +31,7 @@ module.exports = function (config) {
             'www/lib/zxcvbn.js',
             'www/js/*.js',
             'www/js/**/*.js',
-            'tests/*.js',
+//            'tests/*.js',
             'tests/**/*.js',
             '**/*.html'
 
@@ -40,7 +41,6 @@ module.exports = function (config) {
         // list of files to exclude
         exclude: [
         ],
-
 
         // coverage reporter generates the coverage
         reporters: ['progress', 'coverage'],

@@ -10,4 +10,4 @@ before_script:
   - 'npm install -g karma grunt-cli jshint'
   - 'npm install' # install npm packages
 
-script: node_modules/karma/bin/karma start karma.conf.js --single-run
+script: node_modules/karma/bin/karma start karma.conf.js --single-run --log-level=debug

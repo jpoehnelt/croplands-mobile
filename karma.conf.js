@@ -83,17 +83,6 @@ module.exports = function (config) {
             Chrome_travis_ci: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
-            },
-            'PhantomJS_custom': {
-                base: 'PhantomJS',
-                options: {
-                    windowName: 'my-window',
-                    settings: {
-                        webSecurityEnabled: false
-                    }
-                },
-                flags: ['--load-images=true'],
-                debug: true
             }
         },
 
@@ -104,7 +93,7 @@ module.exports = function (config) {
     });
 
     if (process.env.TRAVIS) {
-        config.browsers = ['PhantomJS_custom'];
+        config.browsers = ['Chrome_travis_ci'];
 
     }
 };

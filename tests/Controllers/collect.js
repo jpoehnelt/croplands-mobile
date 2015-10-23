@@ -18,12 +18,12 @@ describe('Collect Controller', function () {
         it('dummy', function () {
             expect(true).toBe(true);
         });
-//        it('todo list should not be complete at start', function () {
-//            _.each(scope.todoList, function (task) {
-//                expect(task.complete).toBe(false);
-//            });
-//            console.log('todo list should not be complete at start');
-//        });
+        it('todo list should not be complete at start', function () {
+            _.each(scope.todoList, function (task) {
+                expect(task.complete).toBe(false);
+            });
+            console.log('todo list should not be complete at start');
+        });
 //
 //        it('should not need to collect more gps positions if 10', function () {
 //            for (var i = 0; i < 10; i++) {

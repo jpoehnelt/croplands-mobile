@@ -49,8 +49,8 @@ module.exports = function (config) {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            'www/js/**/*.js': ['coverage'],
-            '**/*.html': ['ng-html2js']
+            'www/js/**/*.js': ['coverage']
+//            '**/*.html': ['ng-html2js']
         },
 
 //        ngHtml2JsPreprocessor: {

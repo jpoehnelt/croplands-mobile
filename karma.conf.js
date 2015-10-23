@@ -31,6 +31,7 @@ module.exports = function (config) {
             'www/js/*.js',
             'www/js/**/*.js',
             'tests/*.js',
+            'tests/**/*.js',
             '**/*.html'
 
         ],

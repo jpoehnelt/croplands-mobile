@@ -9,7 +9,7 @@ angular.module('croplandsApp.services')
                 self.db = window.sqlitePlugin.openDatabase(DB_CONFIG.name, '1.0', 'database2');
             }
             else {
-                self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'database2');
+                self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'database2', 102400 * 1024);
             }
             // for opening a background db:
 
@@ -246,6 +246,10 @@ angular.module('croplandsApp.services')
 
         self.getCountOfLocationsToSync = function () {
             return countOfLocationsToSync;
+        };
+
+        self.getCountOfLocationsSynced = function () {
+            return countOfLocations - countOfLocationsToSync;
         };
 
         self.isBusy = function () {

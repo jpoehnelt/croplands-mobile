@@ -33,7 +33,7 @@ module.exports = function (config) {
             'www/js/**/*.js',
 //            'tests/*.js',
             'tests/**/*.js',
-            '**/*.html'
+            'www/**/*.html'
 
         ],
 
@@ -53,10 +53,10 @@ module.exports = function (config) {
             '**/*.html': ['ng-html2js']
         },
 
-//        ngHtml2JsPreprocessor: {
-//            stripPrefix: 'www/',
-//            moduleName: 'templates'
-//        },
+        ngHtml2JsPreprocessor: {
+            stripPrefix: 'www/',
+            moduleName: 'templates'
+        },
 
         // web server port
         port: 9876,

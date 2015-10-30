@@ -3,18 +3,14 @@
   "version": "1.4.8",
   "description": "Data for Mapping Global Croplands",
   "devDependencies": {
-    "chai": "^3.3.0",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.10",
-    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.2",
+    "karma-coveralls": "^1.1.2",
     "karma-jasmine": "^0.3.6",
-    "karma-mocha": "^0.2.0",
     "karma-ng-html2js-preprocessor": "^0.2.0",
-    "mocha": "^2.3.3",
-    "phantomjs": "^1.9.18",
-    "shelljs": "^0.3.0"
+    "karma-sauce-launcher": "^0.3.0"
   },
   "cordovaPlugins": [
     "com.ionic.keyboard",

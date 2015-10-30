@@ -5,6 +5,8 @@ module.exports = function (config) {
     config.set({
 
         browserNoActivityTimeout: 100000,
+        browserDisconnectTimeout: 100000,
+        captureTimeout: 100000,
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -36,13 +38,12 @@ module.exports = function (config) {
 
         ],
 
-
         // list of files to exclude
         exclude: [
         ],
 
         // coverage reporter generates the coverage
-        reporters: ['progress', 'coverage'],
+        reporters: ['coverage'],
 
         preprocessors: {
             // source files, that you wanna generate coverage for
@@ -60,14 +61,12 @@ module.exports = function (config) {
         // web server port
         port: 9876,
 
-
         // enable / disable colors in the output (reporters and logs)
         colors: true,
 
-
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_DEBUG,
 
 
         // enable / disable watching file and executing tests whenever any file changes
@@ -79,19 +78,34 @@ module.exports = function (config) {
         browsers: ['Chrome'],
 
         customLaunchers: {
-            Chrome_travis_ci: {
-                base: 'Chrome',
-                flags: ['--no-sandbox']
+            "SL_Android_5.0": {
+                base: "SauceLabs",
+                browserName: "Android",
+                platform: "Linux",
+                version: "5.0"
+            },
+            sl_chrome: {
+                base: 'SauceLabs',
+                browserName: 'chrome',
+                platform: "Linux"
             }
         },
 
-
+        sauceLabs: {
+            testName: 'Mobile App Unit Tests'
+        },
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: true
     });
 
     if (process.env.TRAVIS) {
-        config.browsers = ['Chrome'];
+        config.browsers = Object.keys(config.customLaunchers);
+        config.reporters.push('coveralls');
+        config.coverageReporter = {
+            type: 'lcov',
+            dir: 'coverage/'
+        }
+
     }
 };

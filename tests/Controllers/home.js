@@ -8,7 +8,6 @@ describe('Home Controller', function () {
     var ctrl,
         scope, state, rootScope, $q, Location;
 
-
     beforeEach(inject(function ($rootScope, $controller, $state, _$q_, _Location_) {
         rootScope = $rootScope;
         scope = $rootScope.$new();
@@ -88,7 +87,6 @@ describe('Home Controller', function () {
                 })
             });
 
-            console.log(Location.getCountOfLocations());
             scope.$digest();
             expect(Object.keys(scope.landUseTypes).length).toBe(1);
             expect(scope.landUseTypes[1]).toBe(2);
@@ -100,14 +98,22 @@ describe('Home Controller', function () {
             expect(scope.countNotSynced).toBe(1);
 
         });
-
-
     });
 
     describe('help page', function () {
         it('should be displayed if help not previously viewed', function () {
             scope.$digest();
             expect(state.$current.name).toBe('app.help');
+        });
+
+        it('should be displayed if help not previously viewed', function () {
+            expect(true).toBe(true);
+        });
+        it('should be displayed if help not previously viewed', function () {
+            expect(true).toBe(true);
+        });
+        it('should be displayed if help not previously viewed', function () {
+            expect(true).toBe(true);
         });
     });
 

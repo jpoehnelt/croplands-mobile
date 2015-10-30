@@ -7,7 +7,7 @@ angular.module('croplandsApp.services')
         try {
             platform = $cordovaDevice.getPlatform();
         } catch (e) {
-            Log.error(e);
+            platform = 'unknown';
         }
 
         if (platform === 'Android') {

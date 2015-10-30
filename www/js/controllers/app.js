@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaGeolocation, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location) {
+    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location) {
 
         $scope.go = function (state) {
             if (state === 'app.home') {

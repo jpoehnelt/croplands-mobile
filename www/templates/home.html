@@ -37,6 +37,22 @@
             </div>
 
         </div>
+        
+        <div class="list list-inset">
+            <div class="item item-divider item-icon-right" ng-click="showSyncStatus = !showSyncStatus">
+                <i class="icon smaller ion-chevron-right" ng-show="!showSyncStatus"></i>
+                <i class="icon smaller ion-chevron-down" ng-show="showSyncStatus"></i>
+Sync Status
+            </div>
+            <div class="item" ng-show="showSyncStatus">
+                Synced
+                <span class="item-note">{{ countSynced }}</span>
+            </div>
+            <div class="item" ng-show="showSyncStatus">
+                Waiting to Sync
+                <span class="item-note">{{ countNotSynced }}</span>
+            </div>
+        </div>
 
         <div class="list list-inset">
             <div class="item item-divider item-icon-right" ng-click="showFiles = !showFiles">

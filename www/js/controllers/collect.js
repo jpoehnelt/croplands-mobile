@@ -67,7 +67,6 @@ angular.module('croplandsApp.controllers')
         function cleanUp() {
             $scope.gps.on = false;
             $scope.gpsClear();
-            init();
             Log.debug('[CollectCtr] Cleanup complete')
         }
 

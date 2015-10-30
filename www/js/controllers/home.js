@@ -1,65 +1,71 @@
 angular.module('croplandsApp.controllers')
-    .controller('HomeCtrl', ['$scope', '$state', 'Location', '$cordovaNetwork', 'Log','$cordovaSocialSharing','Backup','$interval', '$q', function ($scope, $state, Location, $cordovaNetwork, Log, $cordovaSocialSharing, Backup, $interval, $q) {
+    .controller('HomeCtrl', ['$scope', '$state', 'Location', 'Log', '$cordovaSocialSharing', 'Backup', '$interval', '$q', function ($scope, $state, Location, Log, $cordovaSocialSharing, Backup, $interval, $q) {
         angular.extend($scope, {
-            messages: Log.messages(),
-            countOfLocations: Location.getCountOfLocations,
-            countOfLocationsToSync: Location.getCountOfLocationsToSync,
-            records: [],
-            landCover: {},
+            landUseTypes: {},
             cropTypes: {},
             waterSources: {}
         });
 
-        function getAllLocations() {
-            Log.debug('[HomeController] Getting all records.');
-            Location.getAllRecords().then(function (locations) {
-                $scope.locations = locations;
-                countClasses();
-            });
-        }
 
-        function countClasses() {
+        $scope.$watch(function () {
+            return [Location.getCountOfLocations(), Location.getCountOfLocationsToSync()];
+        }, computeStats, true);
+
+        function computeStats() {
+            // reset stats
             $scope.landUseTypes = {};
             $scope.cropTypes = {};
             $scope.waterSources = {};
+            $scope.countSynced = 0;
+            $scope.countNotSynced = 0;
 
-            _.each($scope.locations, function (location) {
-
-                if (!$scope.landUseTypes[location.records[0].land_use_type]) {
-                    $scope.landUseTypes[location.records[0].land_use_type] = 1;
-                } else {
-                    $scope.landUseTypes[location.records[0].land_use_type]++;
-                }
-                
-                if (location.records[0].land_use_type === 1) {
-                    if (!$scope.cropTypes[location.records[0].crop_primary]) {
-                        $scope.cropTypes[location.records[0].crop_primary] = 1;
+            Location.getAll().then(function (entries) {
+                _.each(entries, function (entry) {
+                    console.log("entry: " + JSON.stringify(entry));
+                    // stats for sync status
+                    if (entry.synced) {
+                        $scope.countSynced++;
                     } else {
-                        $scope.cropTypes[location.records[0].crop_primary]++;
+                        $scope.countNotSynced++;
                     }
 
-                    if (!$scope.waterSources[location.records[0].water]) {
-                        $scope.waterSources[location.records[0].water] = 1;
+                    var location = JSON.parse(entry.json);
+
+                    // Land Cover Stats
+                    if (!$scope.landUseTypes[location.records[0].land_use_type]) {
+                        $scope.landUseTypes[location.records[0].land_use_type] = 1;
                     } else {
-                        $scope.waterSources[location.records[0].water]++;
+                        $scope.landUseTypes[location.records[0].land_use_type]++;
                     }
-                }
+
+                    // Crop Specific Stats
+                    if (location.records[0].land_use_type === 1) {
+                        if (!$scope.cropTypes[location.records[0].crop_primary]) {
+                            $scope.cropTypes[location.records[0].crop_primary] = 1;
+                        } else {
+                            $scope.cropTypes[location.records[0].crop_primary]++;
+                        }
+
+                        if (!$scope.waterSources[location.records[0].water]) {
+                            $scope.waterSources[location.records[0].water] = 1;
+                        } else {
+                            $scope.waterSources[location.records[0].water]++;
+                        }
+                    }
+                });
             });
+
+
         }
 
-        $scope.$watch(function () {
-            return Location.getCountOfLocations();
-        }, getAllLocations);
-
-
         /// Application Files ///
-        $scope.share = function(fileEntry) {
+        $scope.share = function (fileEntry) {
             updateFiles().then(function (success) {
                 $cordovaSocialSharing
                     .share(fileEntry.name, null, fileEntry.nativeURL)
-                    .then(function(result) {
+                    .then(function (result) {
                         Log.info('[HomeCtrl] Shared ' + fileEntry.name);
-                    }, function(error) {
+                    }, function (error) {
                         Log.error(error);
                     });
             });
@@ -85,9 +91,6 @@ angular.module('croplandsApp.controllers')
             });
         }
 
-        getFileList();
-        $interval(getFileList, 1000*60*60);
-
         ///  End Application Files ///
 
         var help_viewed = window.localStorage.getItem('help_viewed');
@@ -98,5 +101,7 @@ angular.module('croplandsApp.controllers')
         }
 
         // init
-        getAllLocations();
+        getFileList();
+        $interval(getFileList, 1000 * 60 * 60);
+
     }]);

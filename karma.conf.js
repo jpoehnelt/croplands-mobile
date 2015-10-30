@@ -31,7 +31,6 @@ module.exports = function (config) {
             'www/lib/zxcvbn.js',
             'www/js/*.js',
             'www/js/**/*.js',
-//            'tests/*.js',
             'tests/**/*.js',
             'www/**/*.html'
 
@@ -94,6 +93,5 @@ module.exports = function (config) {
 
     if (process.env.TRAVIS) {
         config.browsers = ['Chrome_travis_ci'];
-
     }
 };

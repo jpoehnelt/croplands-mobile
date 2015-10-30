@@ -248,10 +248,6 @@ angular.module('croplandsApp.services')
             return countOfLocationsToSync;
         };
 
-        self.getCountOfLocationsSynced = function () {
-            return countOfLocations - countOfLocationsToSync;
-        };
-
         self.isBusy = function () {
             return busy;
         };

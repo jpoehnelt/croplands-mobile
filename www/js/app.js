@@ -67,16 +67,6 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                     }
                 }
             })
-            .state('app.map', {
-                url: "/map",
-                cache: false,
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/map.html",
-                        controller: 'MapCtrl'
-                    }
-                }
-            })
             .state('app.collect', {
                 url: "/collect",
                 cache: false,
@@ -84,15 +74,6 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                     'menuContent': {
                         templateUrl: "templates/collect.html",
                         controller: 'CollectCtrl'
-                    }
-                }
-            })
-            .state('app.photos', {
-                url: "/photos",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/photos.html",
-                        controller: 'PhotosCtrl'
                     }
                 }
             })

@@ -102,19 +102,8 @@ describe('Home Controller', function () {
 
     describe('help page', function () {
         it('should be displayed if help not previously viewed', function () {
-            scope.$digest();
+            scope.$apply();
             expect(state.$current.name).toBe('app.help');
         });
-
-        it('should be displayed if help not previously viewed', function () {
-            expect(true).toBe(true);
-        });
-        it('should be displayed if help not previously viewed', function () {
-            expect(true).toBe(true);
-        });
-        it('should be displayed if help not previously viewed', function () {
-            expect(true).toBe(true);
-        });
     });
-
 });

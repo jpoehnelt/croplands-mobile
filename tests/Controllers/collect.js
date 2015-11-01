@@ -3,14 +3,33 @@ describe('Collect Controller', function () {
     beforeEach(module('croplandsApp'));
     beforeEach(module('croplandsApp.services'));
     beforeEach(module('croplandsApp.controllers'));
+    beforeEach(module('templates'));
 
     var ctrl,
-        scope;
+        scope, CompassMock, rootScope;
+
+    beforeEach(function () {
+        var heading = {
+            trueHeading: 0,
+            magneticHeading: 10
+        };
+
+        CompassMock = {
+            getHeading: function () {
+                return heading;
+            },
+            setHeading: function (n) {
+                heading = n;
+            }
+        }
+    });
 
     beforeEach(inject(function ($rootScope, $controller) {
         scope = $rootScope.$new();
+        rootScope = $rootScope;
         ctrl = $controller('CollectCtrl', {
-            $scope: scope
+            $scope: scope,
+            Compass: CompassMock
         });
     }));
 
@@ -70,5 +89,62 @@ describe('Collect Controller', function () {
         });
 
     });
+
+    describe('$scope.$watch record.land_use_type', function () {
+        it('should not have cropland attributes if not crop land use', function () {
+            scope.record.land_use_type = 0; // anything but 1
+            scope.$digest();
+            expect(scope.record.water).toBe(undefined);
+            expect(scope.record.intensity).toBe(undefined);
+            expect(scope.record.crop_primary).toBe(undefined);
+            expect(scope.record.crop_secondary).toBe(undefined);
+        });
+        it('should have cropland attributes if cropland', function () {
+            scope.record.land_use_type = 1;
+            scope.$digest();
+            expect(scope.record.water).toBe(0);
+            expect(scope.record.intensity).toBe(0);
+            expect(scope.record.crop_primary).toBe(0);
+            expect(scope.record.crop_secondary).toBe(0);
+        });
+    });
+
+    describe('capture heading', function () {
+        it('should set bearing if heading returned', function () {
+            scope.captureHeading();
+            expect(scope.location.bearing).toBe(CompassMock.getHeading().trueHeading)
+        });
+
+        it('should set bearing to magneticHeading if trueHeading returned', function () {
+            CompassMock.setHeading({magneticHeading: 10});
+            scope.captureHeading();
+            expect(scope.location.bearing).toBe(CompassMock.getHeading().magneticHeading)
+        });
+    });
+
+    describe('gps positions', function () {
+        var position = {
+            coords: {
+                accuracy: 1,
+                lat: 0,
+                lon: 10
+            },
+            timestamp: Date.now()
+        };
+
+        it('should be caught from the event', function () {
+            scope.gps.on = true;
+            rootScope.$broadcast('GPS.on', position);
+            console.log(scope.gps.locations);
+            expect(scope.gps.locations.length).toBe(1);
+        });
+
+        it('should not be logged if scope.gps.on is false', function () {
+            scope.gps.on = false;
+            rootScope.$broadcast('GPS.on', position);
+            expect(scope.gps.locations.length).toBe(0);
+        });
+    });
+
 
 });

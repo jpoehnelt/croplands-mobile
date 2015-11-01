@@ -46,7 +46,6 @@ angular.module('croplandsApp.controllers')
         });
 
 
-
         try {
             $scope.platform = $cordovaDevice.getPlatform();
         }
@@ -88,6 +87,7 @@ angular.module('croplandsApp.controllers')
                 delete $scope.record.water;
                 delete $scope.record.intensity;
                 delete $scope.record.crop_primary;
+                delete $scope.record.crop_secondary;
             }
             else {
                 $scope.record.water = $scope.record.water || 0;
@@ -108,7 +108,7 @@ angular.module('croplandsApp.controllers')
 
             if (result) {
                 Log.debug(JSON.stringify(result));
-                $scope.location.bearing = result.trueHeading || result.magneticHeading;
+                $scope.location.bearing = result.trueHeading === undefined ? result.magneticHeading : result.trueHeading;
                 Log.debug("[CollectCtrl] Heading: " + String($scope.location.bearing));
             } else {
                 Log.error('[CollectCtrl] No compass reading available.');

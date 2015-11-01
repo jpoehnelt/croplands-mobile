@@ -93,11 +93,12 @@ angular.module('croplandsApp.controllers')
 
         ///  End Application Files ///
 
-        var help_viewed = window.localStorage.getItem('help_viewed');
-        Log.debug('[HomeCtrl] Help viewed is: ' + help_viewed);
+        $scope.help_viewed = window.localStorage.getItem('help_viewed');
 
-        if (!help_viewed) {
+        if ($scope.help_viewed !== null) {
             $state.go('app.help');
+        } else {
+            Log.debug('[HomeCtrl] Help viewed is: ' + $scope.help_viewed);
         }
 
         // init

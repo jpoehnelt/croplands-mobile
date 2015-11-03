@@ -43,7 +43,7 @@ module.exports = function (config) {
         ],
 
         // coverage reporter generates the coverage
-        reporters: ['progress', 'coverage'],
+        reporters: ['coverage'],
 
         preprocessors: {
             // source files, that you wanna generate coverage for
@@ -106,6 +106,7 @@ module.exports = function (config) {
             type: 'lcov',
             dir: 'coverage/'
         }
-
+    } else {
+        config.reporters.push('progress');
     }
 };

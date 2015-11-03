@@ -222,30 +222,30 @@ describe('Collect Controller', function () {
 
     });
 
-    describe('saving', function () {
-
-        beforeEach(function () {
-            spyOn(state, "go").and.returnValue();
-
-            for (var i = 0; i < 10; i++) {
-                scope.gps.locations.push({lat: 0, lon: 0, accuracy: 10});
-            }
-            scope.record.land_use_type = 1;
-            scope.record.crop_primary = 1;
-            scope.photos.push('asdfasdf.jpg');
-            scope.location.distance = 100;
-            scope.location.bearing = 90;
-
-            scope.gps.on = true;
-        });
-
-        it('should set to not capture gps points', function () {
-            scope.save();
-            expect(scope.gps.on).toBe(false);
-        });
-
-        // TODO More Tests
-    });
+//    describe('saving', function () {
+//
+//        beforeEach(function () {
+//            spyOn(state, "go").and.returnValue();
+//
+//            for (var i = 0; i < 10; i++) {
+//                scope.gps.locations.push({lat: 0, lon: 0, accuracy: 10});
+//            }
+//            scope.record.land_use_type = 1;
+//            scope.record.crop_primary = 1;
+//            scope.photos.push('asdfasdf.jpg');
+//            scope.location.distance = 100;
+//            scope.location.bearing = 90;
+//
+//            scope.gps.on = true;
+//        });
+//
+//        it('should set to not capture gps points', function () {
+//            scope.save();
+//            expect(scope.gps.on).toBe(false);
+//        });
+//
+//        // TODO More Tests
+//    });
 
 
 });

@@ -14,15 +14,15 @@
   },
   "cordovaPlugins": [
     "com.ionic.keyboard",
-    "cordova-plugin-file",
-    "cordova-plugin-file-transfer",
     "cordova-plugin-whitelist",
     "cordova-plugin-device",
     "cordova-plugin-geolocation",
     "cordova-plugin-network-information",
     "cordova-plugin-splashscreen",
     "cordova-plugin-device-orientation",
-    "cordova-sqlite-storage",
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "io.litehelpers.cordova.sqlite"
   ]
 }

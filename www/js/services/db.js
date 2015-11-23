@@ -66,7 +66,7 @@ angular.module('croplandsApp.services')
     }])
     .factory('Location', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', 'Photos','User', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, Photos,User) {
         var self = this,
-            url = 'https://api.croplands.org/api/locations',
+            url = 'https://usgs-gfsad.herokuapp.com/api/locations',
             countOfLocations,
             countOfLocationsToSync = 0,
             busy = false;
@@ -275,7 +275,7 @@ angular.module('croplandsApp.services')
     }])
     .factory('Photos', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', '$cordovaFileTransfer', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, $cordovaFileTransfer) {
         var self = this,
-            url = 'https://api.croplands.org/upload/image',
+            url = 'https://usgs-gfsad.herokuapp.com/upload/image',
             busy = false;
 
         function markSynced(id) {

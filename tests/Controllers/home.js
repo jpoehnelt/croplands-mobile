@@ -99,11 +99,4 @@ describe('Home Controller', function () {
 
         });
     });
-
-    describe('help page', function () {
-        it('should be displayed if help not previously viewed', function () {
-            scope.$apply();
-            expect(state.$current.name).toBe('app.help');
-        });
-    });
 });

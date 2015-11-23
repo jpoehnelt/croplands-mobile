@@ -21,7 +21,7 @@ angular.module('croplandsApp.controllers')
 
             Location.getAll().then(function (entries) {
                 _.each(entries, function (entry) {
-                    console.log("entry: " + JSON.stringify(entry));
+//                    console.log("entry: " + JSON.stringify(entry));
                     // stats for sync status
                     if (entry.synced) {
                         $scope.countSynced++;
@@ -95,7 +95,7 @@ angular.module('croplandsApp.controllers')
 
         $scope.help_viewed = window.localStorage.getItem('help_viewed');
 
-        if ($scope.help_viewed !== null) {
+        if ($scope.help_viewed !== "true") {
             $state.go('app.help');
         } else {
             Log.debug('[HomeCtrl] Help viewed is: ' + $scope.help_viewed);

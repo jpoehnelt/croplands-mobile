@@ -3,20 +3,6 @@ angular.module('croplandsApp.services', ['ionic', 'ngCordova']);
 angular.module('croplandsApp.controllers', ['ionic', 'ngCordova', 'croplandsApp.services', 'croplands.mappings']);
 
 angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsApp.services'])
-
-    .run(function ($ionicPlatform) {
-        $ionicPlatform.ready(function () {
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-            }
-            if (window.StatusBar) {
-                // org.apache.cordova.statusbar required
-                StatusBar.styleDefault();
-            }
-        });
-    })
     .constant('DB_CONFIG', {
         name: 'DB',
         tables: [
@@ -114,22 +100,6 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
     })
     .run(function (DB) {
         DB.init()
-    })
-    .run(function ($ionicPlatform) {
-        $ionicPlatform.ready(function () {
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-
-                //Change this to false to return accessory bar
-                window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-            }
-            if (window.StatusBar) {
-                // org.apache.cordova.statusBar required
-                window.StatusBar.styleDefault();
-            }
-        });
-
     })
     .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup','$timeout', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup, $timeout) {
         var deviceWatchDelay = 10, compassTimeout, gpsTimeout;

@@ -2,78 +2,65 @@ angular.module('croplandsApp.services')
     .factory('Log', ['$log', function ($log) {
         var self = this, SIZE = 10000;
 
-        var log_array = [];
-        
+        var logHistory = [];
+
         function rotateLog() {
-            if (log_array.length > (SIZE * 2)) {
-                log_array = log_array.slice(log_array.length - SIZE, log_array.length);
-                self.debug('[Log] Slicing array to length: ' + log_array.length.toString());
+            if (logHistory.length > (SIZE * 2)) {
+                logHistory = logHistory.slice(logHistory.length - SIZE, logHistory.length);
+                self.debug('[Log] Slicing array to length: ' + logHistory.length.toString());
             }
         }
 
-        self.info = function (message) {
-            console.log(message);
-            log_array.push({
+        function log(message, type) {
+            message = '[' + _.capitalize(type) + ']' + message;
+
+            logHistory.push({
                 message: message,
-                type: 'info',
+                type: type,
                 date: Date.now()
             });
 
+            console.log(message);
+
             rotateLog();
+        }
+
+        self.info = function (message) {
+            log(message, 'info');
         };
 
         self.debug = function (message) {
-            console.log(message);
-            log_array.push({
-                message: message,
-                type: 'debug',
-                date: Date.now()
-            });
-            rotateLog();
+            log(message, 'debug');
         };
 
         self.warning = function (message) {
-            console.log(message);
-            log_array.push({
-                message: message,
-                type: 'warning',
-                date: Date.now()
-            });
-            rotateLog();
+            log(message, 'warning');
+
         };
 
         self.error = function (message) {
-            console.log(message);
-            log_array.push({
-                message: message,
-                type: 'error',
-                date: Date.now()
-            });
-            rotateLog();
+            log(message, 'error');
+
         };
 
-        self.exception = function (message, url, line, lineNumber, column, error) {
+        self.exception = function (exception) {
+            var format = function (stackframes) {
+                var message = stackframes.map(function (sf) {
+                    return sf.toString();
+                }).join('\n');
 
-            message = '[Error] ' + message + ' Script: ' + url + ' Line: ' + lineNumber
-                + ' Column: ' + column + ' StackTrace: ' + error;
+                log(message, 'exception');
+            };
 
-            console.log(message);
-            log_array.push({
-                message: message,
-                type: 'exception',
-                date: Date.now()
-            });
+            var error = function (err) {
+                log(err.message, 'exception');
+            };
 
-            rotateLog();
-
-            // stop propagation?
-            return true;
+            StackTrace.fromError(exception).then(format).catch(error);
         };
-
-        window.onerror = self.exception;
 
         self.messages = function () {
-            return log_array;
+            return logHistory;
         };
 
         return self;

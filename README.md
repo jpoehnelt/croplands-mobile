@@ -12,5 +12,5 @@ Mapping global croplands using remote sensing technologies present many challeng
 [Link](https://croplands.org)
 
 ###Get the App###
-[Android](https://play.google.com/store/apps/details?id=com.ionicframework.croplandsmobile194689)
-[iOS - Not Currently Maintained](https://itunes.apple.com/us/app/global-croplands/id983733201?mt=8)
+- [Android](https://play.google.com/store/apps/details?id=com.ionicframework.croplandsmobile194689)
+- [iOS - Not Currently Maintained](https://itunes.apple.com/us/app/global-croplands/id983733201?mt=8)

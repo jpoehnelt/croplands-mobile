@@ -72,7 +72,8 @@ angular.module('croplandsApp.controllers')
 
         try {
             $scope.location.source = _.values($cordovaDevice.getDevice()).join(separator = ',');
-            $scope.record.source_description = "Mobile Device: " + $scope.location.source;
+            $scope.record.source_type = "ground";
+            $scope.record.source_description = "mobile_application";
         }
         catch (e) {
             Log.warning('Could not get device id.')

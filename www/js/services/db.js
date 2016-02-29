@@ -66,7 +66,7 @@ angular.module('croplandsApp.services')
     }])
     .factory('Location', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', 'Photos','User', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, Photos,User) {
         var self = this,
-            url = 'https://usgs-gfsad.herokuapp.com/api/locations',
+            url = 'https://api.croplands.org/api/locations',
             countOfLocations,
             countOfLocationsToSync = 0,
             busy = false;
@@ -165,7 +165,7 @@ angular.module('croplandsApp.services')
         };
 
         self.getAllUnsynced = function () {
-            return DB.query('SELECT * FROM location WHERE synced = 0 AND sync_attempts < 10')
+            return DB.query('SELECT * FROM location WHERE synced = 0 AND sync_attempts < 15')
                 .then(function (result) {
                     var locations = DB.fetchAll(result);
                     countOfLocationsToSync = locations.length;
@@ -275,7 +275,7 @@ angular.module('croplandsApp.services')
     }])
     .factory('Photos', ['$rootScope', 'DB', 'Log', '$q', '$timeout', '$http', '$cordovaNetwork', '$cordovaFileTransfer', function ($rootScope, DB, Log, $q, $timeout, $http, $cordovaNetwork, $cordovaFileTransfer) {
         var self = this,
-            url = 'https://usgs-gfsad.herokuapp.com/upload/image',
+            url = 'https://api.croplands.org/upload/image',
             busy = false;
 
         function markSynced(id) {

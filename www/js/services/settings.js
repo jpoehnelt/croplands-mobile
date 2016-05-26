@@ -1,8 +1,9 @@
 angular.module('croplandsApp.services')
     .factory('Settings', [ function () {
         var DEFAULTS = {
-            BACKGROUND_GPS: true,
-            BACKGROUND_COMPASS: false
+            BACKGROUND_GPS: false, // no impact - not allowed with plugin
+            BACKGROUND_COMPASS: false, // no impact - not allowed with plugin
+            NETWORK_DATA: true
         };
 
         function get(setting) {
@@ -15,13 +16,32 @@ angular.module('croplandsApp.services')
             }
         }
 
+        function getAll() {
+            var results = {};
+
+            _.each(DEFAULTS, function (value, key) {
+                results[key] = get(key);
+            });
+            return results;
+        }
+
         function set(setting, value) {
             window.localStorage.setItem(setting, value);
         }
 
+        function setAll(settings){
+            _.each(settings, function (value, key) {
+                set(key, value);
+            });
+
+            return getAll();
+        }
+
         return {
             get: get,
-            set: set
+            set: set,
+            getAll: getAll,
+            setAll: setAll
         }
 
     }]);

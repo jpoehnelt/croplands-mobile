@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location) {
+    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location, Settings) {
 
         $scope.go = function (state) {
             if (state === 'app.home') {
@@ -47,23 +47,40 @@ angular.module('croplandsApp.controllers')
             return network;
         }
 
+        function getOnlineStatus() {
+            try {
+                return $cordovaNetwork.isOnline();
+            } catch (e) {
+                Log.debug('[AppController] Could not check online status.');
+                return false;
+            }
+        }
+
         $scope.$watch(function () {
-            return [$state.current.name, User.isLoggedIn(), getNetwork()];
+            return [$state.current.name, User.isLoggedIn(), getNetwork(), getOnlineStatus()];
         }, watch, true);
 
         $interval(function () {
             Log.debug('[AppController] Interval Check.');
-            watch([$state.current.name, User.isLoggedIn(), getNetwork()]);
+            watch([$state.current.name, User.isLoggedIn(), getNetwork(), getOnlineStatus()]);
         }, 1000*300, 0);
 
         function watch(args) {
             var page = args[0],
                 userLoggedIn = args[1],
                 networkState = args[2],
-                connected = (networkState === 'wifi' || networkState === 'ethernet'),
+                isOnline = args[3],
+                isWifi = networkState === 'wifi',
+                connected = false,
                 cannotRedirect = ['app.help', 'app.collect', 'app.login', 'app.forgot', 'app.register'];
 
-            Log.debug('[AppController] page: ' + page + ' userLoggedIn: ' + userLoggedIn + ' connection: ' + connected);
+            if (!Settings.get('NETWORK_DATA')) {
+                connected = isWifi;
+            } else {
+                connected = isOnline;
+            }
+
+            Log.debug('[AppController] page: ' + page + ' userLoggedIn: ' + userLoggedIn + ' wifi: ' + isWifi + ' online: ' + isOnline + ' connected: ' + connected);
 
             if (connected && userLoggedIn) {
                 Log.debug('[AppController] Attempting to sync.');

@@ -72,6 +72,15 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                     }
                 }
             })
+            .state('app.settings', {
+                url: "/settings",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/settings.html",
+                        controller: 'SettingsCtrl'
+                    }
+                }
+            })
             .state('app.login', {
                 url: "/login", views: {
                     'menuContent': {
@@ -102,7 +111,7 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         DB.init()
     })
     .run(['$ionicPlatform', 'GPS', 'Log', 'Compass', 'Settings','Backup','$timeout', function ($ionicPlatform, GPS, Log, Compass, Settings, Backup, $timeout) {
-        var deviceWatchDelay = 10, compassTimeout, gpsTimeout;
+        var deviceWatchDelay = 4, compassTimeout, gpsTimeout;
 
         function cancelTimeouts() {
             Log.debug('[App] Canceling timeouts.');
@@ -137,9 +146,14 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
         }
 
         function deactivateSensors() {
+            Log.debug('[App] Deactivate Sensors.');
+
             cancelTimeouts();
 
+
+            /// currently do nothing because background gps not allowed by plugin
             if (!Settings.get('BACKGROUND_GPS')) {
+                Log.debug('[App] No Background GPS.');
                 GPS.turnOff();
             }
             else {
@@ -150,10 +164,11 @@ angular.module('croplandsApp', ['ionic', 'croplandsApp.controllers', 'croplandsA
                     } catch (e) {
                         Log.error(e);
                     }
-                }, 1000 * 60 * 3); // 3 minutes
+                }, 1000 * 60 * 10); // 3 minutes
             }
 
             if (!Settings.get('BACKGROUND_COMPASS')) {
+                Log.debug('[App] No Background Compass.');
                 Compass.turnOff();
             }
             else {

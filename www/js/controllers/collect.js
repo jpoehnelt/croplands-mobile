@@ -23,6 +23,7 @@ angular.module('croplandsApp.controllers')
             choices: {
                 landUse: mappings.landUseType.choices,
                 crop: mappings.crop.choices,
+                crop2: [{'id': null, 'label': 'None'}].concat(mappings.crop.choices),
                 intensity: mappings.intensity.choices,
                 water: mappings.water.choices
             },
@@ -94,7 +95,9 @@ angular.module('croplandsApp.controllers')
                 $scope.record.water = $scope.record.water || 0;
                 $scope.record.intensity = $scope.record.intensity || 0;
                 $scope.record.crop_primary = $scope.record.crop_primary || 0;
-                $scope.record.crop_secondary = $scope.record.crop_secondary || 0;
+                $scope.record.crop_primary_coverage = $scope.record.crop_primary_coverage || 100;
+                $scope.record.crop_secondary = $scope.record.crop_secondary || null;
+                $scope.record.crop_tertiary = $scope.record.crop_tertiary || null;
             }
         });
 
@@ -103,6 +106,66 @@ angular.module('croplandsApp.controllers')
             $scope.location.lon = mean(locations, 'lon');
         }, true);
 
+
+        $scope.spaceForSecondary = function () {
+            return parseInt($scope.record.crop_primary_coverage) < 100;
+        };
+
+        $scope.spaceForTertiary = function () {
+            return $scope.record.crop_secondary !== null && ($scope.record.crop_primary_coverage) + parseInt($scope.record.crop_secondary_coverage) < 100;
+        };
+
+        $scope.$watch('record.crop_secondary', function(current, previous) {
+           if (current === $scope.record.crop_primary) {
+               $scope.record.crop_secondary = null;
+               $scope.record.crop_secondary_coverage = null;
+           } else if (previous === null && current >=0) {
+               $scope.record.crop_secondary_coverage = 100 - parseInt($scope.record.crop_primary_coverage);
+           }
+        });
+
+        $scope.$watch('record.crop_tertiary', function(current, previous) {
+            if (current === $scope.record.crop_primary || current === $scope.record.crop_secondary) {
+                $scope.record.crop_tertiary = null;
+                $scope.record.crop_tertiary_coverage = null;
+            } else if (previous === null && current >=0) {
+                $scope.record.crop_tertiary_coverage = 100 - parseInt($scope.record.crop_primary_coverage) - parseInt($scope.record.crop_secondary_coverage);
+            }
+        });
+
+        $scope.$watch(function () {
+            return [$scope.record.crop_primary_coverage, $scope.record.crop_secondary_coverage, $scope.record.crop_tertiary_coverage];
+        }, function (val) {
+            var p = parseInt(val[0]) || 0, // primary
+                s = parseInt(val[1]) || 0, // secondary
+                t = parseInt(val[2]) || 0; // tertiary
+
+            // Secondary and Tertiary must have smaller values
+            s = Math.min(p, s);
+            t = Math.min(s, t);
+
+            // Fix the math if higher level changes
+            while (p + s + t > 100) {
+                var over = p + s + t - 100;
+                if (t > 0) {
+                    t = Math.max(0, t - over);
+                } else if (s > 0) {
+                    s = Math.max(0, s - over);
+                }
+            }
+
+            // Update the model
+            $scope.record.crop_primary_coverage = p;
+            $scope.record.crop_secondary_coverage = s;
+            $scope.record.crop_tertiary_coverage = t;
+
+            if (s === 0) {
+                $scope.record.crop_secondary = null;
+            }
+            if (t === 0) {
+                $scope.record.crop_tertiary = null;
+            }
+        },true);
 
         $scope.captureHeading = function () {
             var result = Compass.getHeading();
@@ -192,7 +255,7 @@ angular.module('croplandsApp.controllers')
         };
 
         $scope.todo = function () {
-            $scope.todoList.gps.complete = $scope.gps.locations.length > MINIMUM_POINTS;
+            $scope.todoList.gps.complete = $scope.gps.locations.length >= MINIMUM_POINTS;
             $scope.todoList.landCover.complete = $scope.record.land_use_type !== 0;
             $scope.todoList.photos.complete = $scope.photos.length > 0;
             $scope.todoList.distance.complete = $scope.location.distance !== null;

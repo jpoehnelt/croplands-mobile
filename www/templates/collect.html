@@ -1,3 +1,23 @@
+<style>
+    .coverage-percentage {
+        min-width: 45px !important;
+        font-size: 16px !important;
+    }
+    .coverage-range {
+        margin: 0;
+    }
+
+    .crop-select {
+        border-bottom: 0;
+    }
+
+    .crop-coverage {
+        border-top: 0;
+        padding-top: 0;
+    }
+
+</style>
+
 <ion-view view-title="Collect Data">
     <ion-content>
         <div ng-if="photosEnabled">
@@ -79,28 +99,65 @@
                 <select ng-model="record.intensity" ng-options="type.id as type.label for type in choices.intensity">
                 </select>
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-select crop-select">
                 <div class="input-label">
                     Primary Crop
                 </div>
                 <select ng-model="record.crop_primary" ng-options="type.id as type.label for type in choices.crop">
                 </select>
             </label>
-            <label class="item item-input item-select">
-                <div class="input-label">
-                    Secondary Crop
-                </div>
-                <select ng-model="record.crop_secondary" ng-options="type.id as type.label for type in choices.crop">
-                </select>
-            </label>
-                </span>
+             <div class="item crop-coverage">
+                 <div class="range range-balanced">
+                     <input type="range" class="coverage-range" min="0" max="100" step="1"
+                            ng-model="record.crop_primary_coverage">
+                     <i class="icon coverage-percentage">{{record.crop_primary_coverage}}%</i>
+                 </div>
+             </div>
+            <span ng-if="record.crop_primary_coverage && record.crop_primary_coverage < 100">
+                <label class="item item-input item-select crop-select">
+                    <div class="input-label">
+                        Secondary Crop
+                    </div>
+                    <select ng-model="record.crop_secondary"
+                            ng-options="type.id as type.label for type in choices.crop2">
+                    </select>
+                </label>
+               <div class="item crop-coverage" ng-if="record.crop_secondary !== null">
+                   <div class="range range-balanced">
+                       <input type="range" class="coverage-range" min="0" max="100" step="1"
+                              ng-model="record.crop_secondary_coverage">
+                       <i class="icon coverage-percentage">{{record.crop_secondary_coverage}}%</i>
+                   </div>
+               </div>
+             </span>
+            <span ng-if="spaceForTertiary()">
+                <label class="item item-input item-select crop-select">
+                    <div class="input-label">
+                        Tertiary Crop
+                    </div>
+                    <select ng-model="record.crop_tertiary"
+                            ng-options="type.id as type.label for type in choices.crop2">
+                    </select>
+                </label>
+                 <div class="item crop-coverage" ng-if="record.crop_tertiary !== null">
+                     <div class="range range-balanced">
+                         <input type="range" class="coverage-range" min="0" max="100" step="1"
+                                ng-model="record.crop_tertiary_coverage">
+                         <i class="icon coverage-percentage">{{record.crop_tertiary_coverage}}%</i>
+                     </div>
+                 </div>
+             </span>
+
+            </span>
+
             <div class="item item-divider">
                 Quality Control
             </div>
             <div class="item item-icon-right" ng-repeat="todo in todoList">
                 <i class="icon ion-checkmark balanced" ng-show="todo.complete"></i>
                 <i class="icon ion-close" ng-hide="todo.complete"></i>
-                {{ todo.message }}</div>
+                {{ todo.message }}
+            </div>
 
         </div>
         <div class="padding-horizontal">

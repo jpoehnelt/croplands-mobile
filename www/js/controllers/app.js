@@ -1,5 +1,5 @@
 angular.module('croplandsApp.controllers')
-    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location, Settings) {
+    .controller('AppCtrl', function ($scope, $interval, $state, $cordovaDevice, $cordovaNetwork, GPS, $ionicViewSwitcher, User, Log, Location, Settings, $timeout) {
 
         $scope.go = function (state) {
             if (state === 'app.home') {
@@ -101,4 +101,7 @@ angular.module('croplandsApp.controllers')
 
         }
 
+        $timeout(function () {
+            watch([$state.current.name, User.isLoggedIn(), getNetwork(), getOnlineStatus()]);
+        }, 10000);
     });

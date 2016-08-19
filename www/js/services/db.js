@@ -29,6 +29,28 @@ angular.module('croplandsApp.services')
                     Log.error(err);
                     return [];
                 });
+
+                var reset = localStorage.getItem('reset');
+                if (reset === null) {
+                    self.query('UPDATE photo set synced = 0, sync_attempts = 0 where synced = 1').then(function (result) {
+                        Log.debug("[DB] " + JSON.stringify(result));
+                        return [];
+                    }, function (err) {
+                        Log.error(err);
+                        return [];
+                    });
+                    self.query('UPDATE location set synced = 0, sync_attempts = 0 where synced = 1').then(function (result) {
+                        Log.debug("[DB] " + JSON.stringify(result));
+                        return [];
+                    }, function (err) {
+                        Log.error(err);
+                        return [];
+                    });
+
+                    localStorage.setItem('reset', true);
+                }
+
+
                 Log.debug('Table ' + table.name + ' initialized');
             });
         };

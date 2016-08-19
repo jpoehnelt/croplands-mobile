@@ -1,6 +1,6 @@
 {
   "name": "croplands-mobile",
-  "version": "1.4.13",
+  "version": "1.4.15",
   "description": "Data for Mapping Global Croplands",
   "devDependencies": {
     "jasmine-core": "^2.3.4",
